@@ -1,0 +1,584 @@
+/* ============ ЛОКАЛЬНЫЕ ШРИФТЫ ============ */
+@font-face {
+    font-family: 'Great Vibes';
+    src: url('../fonts/GreatVibes-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ============ CSS-ПЕРЕМЕННЫЕ ДЛЯ ТЁМНОЙ/СВЕТЛОЙ ТЕМЫ ============ */
+
+:root {
+    /* Светлая тема (по умолчанию) */
+    --bg-primary: #F8F9FA;
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --accent: #b8e600;
+    --accent-hover: #a0d100;
+    --section-bg: #8caf2d;
+    --section-text: whitesmoke;
+    --navbar-text: #7e9816;
+    --navbar-text-hover: #6a8212;
+    --footer-text: #899244;
+    --link-hover-bg: rgba(126, 152, 22, 0.08);
+    --hero-gradient-start: rgba(79, 70, 229, 0.2);
+}
+
+/* Тёмная тема */
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --text-primary: #f8f9fa;
+    --text-secondary: #62686d;
+    --accent: #a8d800;
+    --accent-hover: #90c000;
+    --section-bg: #2d372d;
+    --section-text: #e9ecef;
+    --navbar-text: #b0c830;
+    --navbar-text-hover: #d0e850;
+    --footer-text: #a9b264;
+    --link-hover-bg: rgba(176, 200, 48, 0.15);
+    --hero-gradient-start: rgba(100, 90, 200, 0.3);
+}
+
+/* Плавные переходы для всех элементов, где меняются цвета */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============ ГЛОБАЛЬНЫЕ СТИЛИ ============ */
+
+html, body {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    /* Базовый шрифт сайта — системный стек для читабельности */
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, 'Noto Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Опционально: только заголовки — в Great Vibes, основной текст — системный шрифт
+h1, h2, h3, .display-heading {
+    font-family: 'Great Vibes', cursive;
+}
+*/
+
+h2 {
+    margin: 15px;
+    color: var(--text-primary);
+}
+
+/* ============ ХЕДЕР И НАВБАР ============ */
+
+header,
+.navbar,
+.custom-navbar {
+    background-color: var(--bg-primary) !important;
+    color: var(--navbar-text);
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header *,
+.navbar-brand,
+.nav-link,
+.nav-link.active {
+    color: var(--navbar-text) !important;
+}
+
+.nav-link.active {
+    font-weight: 600;
+}
+
+/* Бренд сайта: применяем декоративный шрифт только здесь */
+.navbar-brand, .navbar-brand span {
+    font-family: 'Great Vibes', cursive;
+    font-weight: 400;
+}
+
+.navbar-brand {
+    font-size: 1.5rem; 
+    line-height: 1;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+.navbar-brand span { font-size: 1.5rem; }
+
+@media (min-width: 992px) { /* ≥ lg */
+    .navbar-brand { font-size: 2rem; }
+    .navbar-brand span { font-size: 2rem; }
+}
+
+.navbar-brand img { height: 40px; width: auto; }
+
+/* Стили для кнопок в хедере */
+.nav-btn {
+    font-size: 1rem;
+    padding: .375rem 1rem;
+}
+
+.nav-btn:hover {
+    color: var(--navbar-text-hover) !important;
+    background-color: var(--link-hover-bg);
+    border-radius: 0.375rem;
+}
+
+.no-border,
+.login-btn {
+    border: none !important;
+    background: transparent !important;
+}
+
+.no-border:hover {
+    background-color: var(--link-hover-bg) !important;
+    color: var(--navbar-text-hover) !important;
+}
+
+/* Hover для пунктов меню */
+.navbar .nav-link {
+    transition: color 0.3s ease, background-color 0.3s ease;
+    position: relative;
+}
+
+.navbar .nav-link:hover {
+    color: var(--navbar-text-hover) !important;
+    background-color: var(--link-hover-bg);
+    border-radius: 0.375rem;
+}
+
+/* Подчеркивание при наведении */
+.navbar .nav-link:hover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--navbar-text);
+    transition: all 0.3s ease;
+}
+
+.navbar .nav-link.active:hover {
+    color: #5a700f !important;
+    background-color: rgba(126, 152, 22, 0.15);
+}
+
+/* Центрирование меню */
+.navbar .navbar-nav.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+}
+
+/* Выравнивание кнопок по правому краю */
+.navbar .d-flex.flex-column.flex-lg-row {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Центрирование меню и элементов в раскрытом (мобильном) навбаре */
+@media (max-width: 991.98px) {
+    .navbar .navbar-collapse { align-items: center; }
+    .navbar .navbar-nav { align-items: center; }
+    .navbar .navbar-nav .nav-link { text-align: center; }
+}
+
+/* ============ ФУТЕР ============ */
+
+footer,
+.nav-footer {
+    background-color: var(--bg-primary);
+}
+
+.nav-footer a,
+.nav-footer .nav-link {
+    color: var(--footer-text) !important;
+    font-weight: 500;
+}
+
+.nav-footer {
+    padding: 2rem 0;
+    text-align: center;
+}
+
+/* ============ ГЕРОЙ-СЕКЦИЯ ============ */
+
+.hero-bg {
+    background: radial-gradient(circle at top, var(--hero-gradient-start), transparent 60%);
+    position: absolute;
+    top: -10rem;
+    left: 0;
+    right: 0;
+    height: 30rem;
+    z-index: -1;
+    filter: blur(4rem);
+}
+
+@media (min-width: 576px) {
+    .hero-bg {
+        top: -20rem;
+        height: 50rem;
+    }
+}
+
+.hero-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+@media (min-width: 576px) {
+    .hero-section {
+        padding-top: 12rem;
+        padding-bottom: 12rem;
+    }
+}
+
+.display-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+}
+
+@media (min-width: 576px) {
+    .display-heading {
+        font-size: 3.75rem;
+    }
+}
+
+.lead-text {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+}
+
+/* ============ СЕКЦИЯ "ИССЛЕДУЙТЕ ПОЭЗИЮ" ============ */
+
+.discover-section {
+    background-color: var(--section-bg) !important;
+    padding: 4rem 0;
+}
+
+.text-indigo-light,
+.section-subtitle,
+.section-title,
+.section-description,
+.feature-title,
+.feature-text,
+.feature-link {
+    color: var(--section-text);
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.section-title {
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+@media (min-width: 576px) {
+    .section-title {
+        font-size: 2.25rem;
+    }
+}
+
+.section-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.feature-title {
+    font-size: 1.125rem;
+}
+
+.feature-text {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.feature-link {
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.feature-card {
+    position: relative;
+    text-align: left;
+    border-radius: 16px;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.feature-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.12); }
+
+.feature-card::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(126,152,22,0.25), rgba(126,152,22,0.0) 40%, rgba(126,152,22,0.45) 100%);
+    opacity: 0; transition: opacity .25s ease;
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-thumb {
+    height: 220px;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.08), rgba(255,255,255,.08) 12px, rgba(255,255,255,.15) 12px, rgba(255,255,255,.15) 24px);
+}
+.feature-icon { font-size: 3rem; opacity: .9; }
+
+.feature-info {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 1rem 1.25rem 1.25rem;
+    transform: translateY(30%);
+    transition: transform .25s ease;
+}
+.feature-card:hover .feature-info { transform: translateY(0); }
+
+@media (max-width: 575.98px) {
+    .feature-card h4,
+    .feature-card p,
+    .feature-card a {
+        text-align: center;
+    }
+}
+
+/* ============ ССЫЛКИ И КНОПКИ ============ */
+
+.learn-more-btn {
+    color: var(--text-primary) !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.learn-more-btn:hover {
+    color: var(--navbar-text-hover) !important;
+    text-decoration: underline;
+}
+
+.register-btn {
+    color: var(--text-secondary) !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn.btn-main {
+    background-color: var(--accent) !important;
+    border: none;
+    color: var(--text-primary) !important;
+}
+
+.btn.btn-main:hover {
+    background-color: var(--accent-hover) !important;
+}
+
+/* ============ ПОЭТЫ (GRID CARDS) ============ */
+.poets-title {
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+.poets-section { background: var(--bg-primary); }
+.poet-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-primary);
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    display: flex; flex-direction: column;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.poet-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.12); }
+
+/* Псевдооверлей через ::before */
+.poet-card::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(126,152,22,0.25), rgba(126,152,22,0.0) 40%, rgba(126,152,22,0.45) 100%);
+    opacity: 0; transition: opacity .25s ease;
+}
+.poet-card:hover::before { opacity: 1; }
+
+.poet-thumb {
+    height: 280px; /* крупные карточки */
+    background: repeating-linear-gradient(45deg, #e9ecef, #e9ecef 12px, #dee2e6 12px, #dee2e6 24px);
+    color: var(--text-secondary);
+}
+.poet-initial { font-size: 4rem; font-weight: 800; color: var(--text-secondary); opacity: .5; }
+
+.poet-info {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 1rem 1.25rem 1.25rem;
+    color: var(--text-primary);
+    transform: translateY(30%);
+    transition: transform .25s ease;
+}
+.poet-card:hover .poet-info { transform: translateY(0); }
+.poet-name { color: var(--text-primary); }
+.poet-meta { color: var(--text-secondary); }
+
+/* ============ МОДАЛЬНЫЕ ОКНА ============ */
+
+.modal-content {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--link-hover-bg);
+    padding-bottom: 0;
+}
+
+.modal-title {
+    color: var(--text-primary) !important;
+}
+
+.modal-body {
+    padding-top: 1.5rem;
+    color: var(--text-primary) !important;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-primary) !important;
+}
+
+.form-control,
+.form-text {
+    color: var(--text-primary) !important;
+    background-color: var(--bg-primary) !important;
+    border-color: var(--link-hover-bg) !important;
+}
+
+.form-control:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 0.2rem rgba(184, 230, 0, 0.25);
+}
+
+/* ============ УВЕДОМЛЕНИЯ (NOTIFICATIONS) ============ */
+.notif { position: relative; }
+.notif-bell {
+    background: var(--bg-primary) !important;
+    color: var(--navbar-text) !important;
+    border: none !important;
+    border-radius: 50%;
+    width: 42px; height: 42px;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+.notif-bell:hover { background: var(--link-hover-bg) !important; }
+.notif-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: #e91e63; color: #fff; font-weight: 700; font-size: .7rem; padding: .1rem .3rem;
+}
+
+/* Панель уведомлений */
+.notif-panel {
+    position: absolute; top: 120%; right: 0;
+    width: 280px; background: var(--bg-primary);
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--link-hover-bg);
+    opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 1100;
+}
+
+/* Открытие по hover (desktop) и по классу .open (mobile/click) */
+.notif:hover .notif-panel,
+.notif.open .notif-panel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.notif-panel-header {
+    background: var(--accent);
+    color: var(--text-primary);
+    padding: .75rem 1rem;
+    position: relative;
+}
+.notif-panel-header .notif-badge { top: 8px; right: 8px; }
+
+.notif-list { list-style: none; margin: 0; padding: .5rem 0; background: var(--bg-primary); }
+.notif-item {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .5rem 1rem; color: var(--text-primary);
+}
+.notif-item:hover,
+.notif-item:focus {
+    background: var(--accent);
+    color: var(--text-primary);
+    border-radius: 12px;
+    margin: .25rem .5rem;
+}
+.notif-item .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 999px;
+    background: var(--accent); color: var(--text-primary); font-weight: 700; font-size: .875rem;
+}
+.notif-item.highlight { background: var(--accent); color: var(--text-primary); border-radius: 12px; margin: .25rem .5rem; }
+
+/* SVG bell icon styling */
+.notif .bell, .notif .bell-icon { color: var(--navbar-text); transition: color .2s ease, transform .2s ease; }
+.notif-bell:hover .bell, .notif-bell:hover .bell-icon { color: var(--navbar-text-hover); transform: rotate(-10deg); }
+
+/* Увеличиваем область hover, чтобы успеть навести курсор на панель */
+.notif { padding: 4px; }
+.notif .notif-panel { margin-top: 4px; }
+
+/* Мобильная адаптация: панель во всю ширину под хедером при малой ширине */
+@media (max-width: 575.98px) {
+    /* Не трогаем FAB; это правило для возможного дропдауна в шапке */
+    .notif:not(.notif-fab) { position: static; }
+    .notif:not(.notif-fab) .notif-panel {
+        position: absolute; left: 0; right: 0; top: 100px; /* высота хедера */
+        width: auto; border-radius: 0 0 16px 16px;
+    }
+}
+
+/* ===== FAB (плавающая кнопка уведомлений) ===== */
+.notif-fab {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 2000; /* выше хедера и модалей Bootstrap backdrop */
+    will-change: transform;
+    transform: translateZ(0); /* собственный слой для уменьшения рывков */
+}
+.notif-fab .notif-bell {
+    width: 56px; height: 56px; border-radius: 999px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.2);
+}
+.notif-fab .notif-badge { top: -2px; right: -2px; }
+.notif-fab .notif-panel {
+    bottom: 70px; right: 0; top: auto; /* открываем вверх */
+    transform: translateY(6px);
+    z-index: 2001;
+}
+.notif-fab:hover .notif-panel,
+.notif-fab.open .notif-panel { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 575.98px) {
+    .notif-fab { right: 12px; bottom: 12px; }
+    .notif-fab .notif-bell { width: 52px; height: 52px; }
+    .notif-fab .notif-panel { right: 0; left: auto; width: 92vw; }
+}
+
+/* Сделаем кнопку точно кликабельной на мобильных */
+.notif-fab .notif-bell {
+    pointer-events: auto;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+@media (max-width: 991.98px) {
+    .notif { order: 2; }
+}

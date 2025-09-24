@@ -1,0 +1,220 @@
+
+
+.nav-footer a{
+    color: #899244 !important;
+ }
+ h2 {
+    margin: 15px;
+} 
+
+.nav-link.active {
+    font-weight: 600;
+    color: #7e9816!important;
+}
+
+ header * {
+    color: #7e9816 !important; 
+}
+header {
+    background-color: #F8F9FA;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+footer{
+    background-color: #F8F9FA;
+} 
+.btn.btn-main{
+    background-color: #b8e600 !important;
+}
+ 
+.hero-bg {
+            background: radial-gradient(circle at top, rgba(129, 140, 248, 0.3), transparent 60%);
+            position: absolute;
+            top: -10rem;
+            left: 0;
+            right: 0;
+            height: 30rem;
+            z-index: -1;
+            filter: blur(4rem);
+        }
+        @media (min-width: 576px) {
+            .hero-bg {
+                top: -20rem;
+                height: 50rem;
+            }
+        }
+        .hero-section {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+        @media (min-width: 576px) {
+            .hero-section {
+                padding-top: 12rem;
+                padding-bottom: 12rem;
+            }
+        }
+        .display-heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+        @media (min-width: 576px) {
+            .display-heading {
+                font-size: 3.75rem; /* ~60px */
+            }
+        }
+        .lead-text {
+            font-size: 1.125rem; /* ~18px */
+            line-height: 1.75;
+        }
+
+.discover-section {
+    background-color: #8caf2d !important;
+}
+
+.text-indigo-light {
+    color: whitesmoke ;
+}
+
+.hero-bg {
+    background: radial-gradient(circle at top, rgba(79, 70, 229, 0.2), transparent 60%);
+    position: absolute;
+    top: -10rem;
+    left: 0;
+    right: 0;
+    height: 30rem;
+    z-index: -1;
+    filter: blur(4rem);
+}
+
+.hero-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+@media (min-width: 576px) {
+    .hero-section {
+        padding-top: 12rem;
+        padding-bottom: 12rem;
+    }
+}
+
+.display-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+@media (min-width: 576px) {
+    .display-heading {
+        font-size: 3.75rem;
+    }
+}
+
+.lead-text {
+    font-size: 1.125rem;
+    line-height: 1.75;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.section-title {
+    font-size: 1.875rem; /* ~30px */
+    line-height: 1.2;
+}
+
+@media (min-width: 576px) {
+    .section-title {
+        font-size: 2.25rem; /* ~36px */
+    }
+}
+
+.section-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.feature-title {
+    font-size: 1.125rem;
+}
+
+.feature-text {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.feature-link {
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.nav-footer {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.nav-footer .nav-link {
+    color: #495057;
+    font-weight: 500;
+}
+
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.btn-main:hover {
+    background-color: #a0d100 !important;
+    border-color: #a0d100 !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+@media (min-width: 992px) {
+    .navbar .btn.w-lg-auto {
+        width: auto !important;
+        max-width: max-content;
+    }
+}
+
+.login-btn {
+    border: none !important;
+}
+
+/* Плавный hover-эффект для пунктов меню */
+.navbar .nav-link {
+    transition: color 0.3s ease, background-color 0.3s ease;
+    position: relative;
+}
+
+.navbar .nav-link:hover {
+    color: #6a8212 !important; /* чуть темнее основного цвета */
+    background-color: rgba(126, 152, 22, 0.08); /* легкая подсветка фона */
+    border-radius: 0.375rem; /* скругление, как у кнопок */
+}
+
+.navbar .nav-link:hover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #7e9816;
+    transition: width 0.3s ease, left 0.3s ease;
+    left: 0;
+    width: 100%;
+}
+

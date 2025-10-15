@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Ничего — Антиутопия без поэзии</title>
+    <script src="../scripts/theme.js"></script>
+    <script src="../scripts/bootstrap.bundle.js"></script>
+    <script src="../scripts/jquery-3.7.1.min.js"></script>
+    <script src="../scripts/load-components.js"></script>
+    <style>
+    /* ============ АНТИУТОПИЯ "НИЧЕГО" ============ */
+    :root {
+        --nothing-bg-start: var(--accent);
+        --nothing-bg-end: var(--section-bg);
+    }
+
+    [data-theme="dark"] {
+        --nothing-bg-start: #1a1a1a;
+        --nothing-bg-end: #0a0a0a;
+    }
+
+    .nothing-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--nothing-bg-start), var(--nothing-bg-end));
+        color: var(--text-primary);
+        position: relative;
+        overflow: hidden;
+        transition: background 15s ease-in-out;
+    }
+
+    .nothing-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #000000, #0a0a0a);
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .nothing-content {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        text-align: center;
+        transition: opacity 10s ease-in-out;
+    }
+
+    .nothing-title {
+        font-size: 4rem;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: opacity 8s ease-in-out;
+    }
+
+    .nothing-subtitle {
+        font-size: 1.8rem;
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        opacity: 0.9;
+        transition: opacity 8s ease-in-out;
+    }
+
+    .nothing-button {
+        position: relative;
+        background: transparent;
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        border-radius: 8px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 1; /* ← УБРАЛИ 0! */
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .nothing-button:hover {
+        color: var(--text-primary);
+    }
+
+    /* Эффект раскраски при наведении */
+    .nothing-button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(184, 230, 0, 0.2), transparent 70%);
+        transition: width 0.8s ease, height 0.8s ease;
+        z-index: -1;
+    }
+
+    .nothing-button:hover::before {
+        width: 400px;
+        height: 400px;
+    }
+
+    /* Анимация раскраски при клике */
+    .expand-effect {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent), var(--section-bg));
+        transform: translate(-50%, -50%);
+        z-index: 10000;
+        transition: width 1.5s ease, height 1.5s ease;
+    }
+
+    .nothing-footer {
+        position: absolute;
+        bottom: 2rem;
+        text-align: center;
+        opacity: 0.6;
+        font-size: 0.9rem;
+        transition: opacity 8s ease-in-out;
+    }
+
+    /* Стартовая анимация */
+    .nothing-start {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, var(--nothing-bg-start), var(--nothing-bg-end));
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        transition: opacity 3s ease-in-out;
+    }
+
+    .nothing-start h1 {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        animation: lightPulse 2s infinite;
+    }
+
+    .nothing-start p {
+        font-size: 1.5rem;
+        max-width: 600px;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    @keyframes lightPulse {
+        0% { text-shadow: 0 0 10px var(--accent); }
+        50% { text-shadow: 0 0 20px var(--accent); }
+        100% { text-shadow: 0 0 10px var(--accent); }
+    }
+
+    /* Класс для видимой кнопки */
+    .button-visible {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transition: all 0.3s ease;
+    }
+
+    /* Анимация появления */
+    .button-visible:hover {
+        transform: scale(1.05) !important;
+    }
+
+    /* Эффект раскраски при наведении */
+    .button-visible::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(184, 230, 0, 0.2), transparent 70%);
+        transition: width 0.8s ease, height 0.8s ease;
+        z-index: -1;
+    }
+
+    .button-visible:hover::before {
+        width: 400px;
+        height: 400px;
+    }
+</style>
+</head>
+<body class="nothing-container">
+    <div class="nothing-start" id="start-screen">
+        <h1>Свет поэзии</h1>
+        <p>Последний луч света в мире, где больше нет стихов...</p>
+    </div>
+
+    <div class="nothing-overlay" id="fade-overlay"></div>
+
+    <div class="nothing-content" id="main-content">
+        <h1 class="nothing-title">Ничего</h1>
+        <p class="nothing-subtitle">Мир без поэзии — это мир без души</p>
+        
+        <button class="nothing-button" id="find-poetry">Найти поэзию</button>
+        
+        <div class="nothing-footer">
+            <p>Этот мир существует только в вашем воображении. Пока вы помните поэзию, мир не умрёт.</p>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const start = document.getElementById('start-screen');
+    const overlay = document.getElementById('fade-overlay');
+    const main = document.getElementById('main-content');
+    const button = document.getElementById('find-poetry');
+    const startTitle = start.querySelector('h1');
+    const startText = start.querySelector('p');
+
+    // Z-index'ы, чтобы всё корректно наслаивалось
+    overlay.style.zIndex = '10';
+    main.style.zIndex = '20';
+    button.style.zIndex = '30';
+
+    // Плавный старт — 3 секунды показа "Свет поэзии"
+    setTimeout(function() {
+        // Мягкое угасание текста
+        startTitle.style.transition = 'opacity 2s ease-in-out, transform 2s ease-in-out';
+        startText.style.transition = 'opacity 2s ease-in-out, transform 2s ease-in-out';
+
+        startTitle.style.opacity = '0';
+        startText.style.opacity = '0';
+        startTitle.style.transform = 'translateY(-20px)';
+        startText.style.transform = 'translateY(20px)';
+
+        // После угасания текста — исчезает фон стартового экрана
+        setTimeout(function() {
+            start.style.transition = 'opacity 3s ease-in-out';
+            start.style.opacity = '0';
+
+            // Когда стартовый экран исчезает — начинаем затемнение
+            setTimeout(function() {
+                start.style.display = 'none';
+
+                // Плавное затемнение overlay
+                overlay.style.transition = 'opacity 10s ease-in-out';
+                overlay.style.opacity = '1';
+
+                // Через 9 секунд появляется кнопка
+                setTimeout(function() {
+                    button.classList.add('button-visible');
+                    button.style.transition = 'opacity 2s ease, transform 0.5s ease';
+                    button.style.opacity = '0';
+                    button.style.pointerEvents = 'none';
+                    button.style.transform = 'scale(0.9)';
+
+                    // Запускаем плавное проявление кнопки
+                    setTimeout(() => {
+                        button.style.opacity = '1';
+                        button.style.pointerEvents = 'auto';
+                        button.style.transform = 'scale(1)';
+                    }, 100);
+                }, 9000);
+            }, 3000); // ← задержка перед затемнением после угасания текста
+        }, 2000); // ← длительность угасания текста
+    }, 3000); // ← сколько показывается экран "Свет поэзии"
+
+    // Обработка кнопки "Найти поэзию"
+    button.addEventListener('click', function(e) {
+        const expand = document.createElement('div');
+        expand.className = 'expand-effect';
+
+        const rect = this.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        expand.style.left = x + 'px';
+        expand.style.top = y + 'px';
+
+        document.body.appendChild(expand);
+
+        // Анимация расширения
+        setTimeout(() => {
+            expand.style.width = '200vw';
+            expand.style.height = '200vh';
+        }, 10);
+
+        // Плавное возвращение фона
+        document.querySelector('.nothing-container').style.transition = 'background 3s ease-out';
+        document.querySelector('.nothing-container').style.background =
+            'linear-gradient(135deg, var(--nothing-bg-start), var(--nothing-bg-end))';
+
+        // Переход на главную
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 2500);
+    });
+});
+</script>
+
+
+
+</body>
+</html>

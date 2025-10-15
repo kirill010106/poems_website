@@ -11,52 +11,12 @@
     <script src="scripts/bootstrap.bundle.js"></script>
     <script src="scripts/jquery-3.7.1.min.js"></script>
     <script src="scripts/notifications.js"></script>
+    <script src="./scripts/load-components.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="header">
-           <nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-        <!-- Логотип -->
-        <a class="navbar-brand d-flex align-items-center gap-2" href="./index.html">
-            <img src="img/favicon.png" alt="Логотип" class="d-inline-block" style="height: 40px;">
-            <span>Сборник стихов</span>
-        </a>
-
-        <!-- Бургер-меню -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Меню и кнопки -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Главное меню: центрировано -->
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Удиви меня</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="pages/poets.html">Поэты</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Ничего</a>
-                </li>
-            </ul>
-
-            <!-- Кнопки вход/регистрация и тема: справа -->
-            <div class="d-flex flex-column flex-lg-row align-items-center align-items-lg-start gap-2 gap-lg-2 mt-3 mt-lg-0 ms-lg-auto">
-                <a href="#" class="btn login-btn btn-outline-secondary btn-sm w-100 w-lg-auto nav-btn no-border" data-bs-toggle="modal" data-bs-target="#loginModal">Вход</a>
-                <a href="#" class="btn register-btn btn-main btn-sm w-100 w-lg-auto nav-btn" data-bs-toggle="modal" data-bs-target="#registerModal">Регистрация</a>
-                <button id="theme-toggle" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 mt-2 mt-lg-0" style="border: none;">
-                    <span>🌙</span>
-                    <span id="theme-label">Темная</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</nav>
-    </header>
+    <div id="header-placeholder"></div>
+    
 
     <main> 
 <div class="hero-bg"></div>
@@ -138,50 +98,31 @@
     </main>
 
 
-    <footer>
-        <div class="nav-footer">
-            <div class="nav flex-column justify-content-center align-items-center">
-    <!-- Плавающая кнопка уведомлений (FAB) в правом нижнем углу -->
-    <div class="notif notif-fab">
-        <button class="btn btn-light position-relative notif-bell" aria-label="Уведомления" aria-expanded="false">
-            <span class="bell" aria-hidden="true">🔔</span>
-            <span class="badge rounded-pill notif-badge">4</span>
-        </button>
-        <div class="notif-panel shadow">
-            <div class="notif-panel-header">
-                <span class="bell" aria-hidden="true">🔔</span>
-                <span class="badge rounded-pill notif-badge">4</span>
-            </div>
-            <ul class="notif-list">
-                <li class="notif-item"><span class="num">1</span> Новое сообщение...</li>
-                <li class="notif-item"><span class="num">2</span> Новое сообщение...</li>
-                <li class="notif-item"><span class="num">3</span> Новое сообщение...</li>
-                <li class="notif-item"><span class="num">4</span> Новое сообщение...</li>
-            </ul>
-        </div>
-    
-    </div>
-
-            <a class="nav-link active" href="https://www.instagram.com/theofficialmads?igsh=NjE5ajhkam1keDg0" id="koshki">Величайший поэт</a>
-            <a class="nav-link active" href="#">Наверх</a>
-            </div>
-        </div>
-
-    </footer>
+    <div id="footer-placeholder"></div>
 
 
 <!-- Модальное окно: Вход -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+<div class="modal fade glass-modal" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
+        <!-- КВАДРАТЫ (внешние, выходят за пределы формы) -->
+        <div class="glass-squares">
+            <div class="square square-1"></div>
+            <div class="square square-2"></div>
+            <div class="square square-3"></div>
+            <div class="square square-4"></div>
+            <div class="square square-5"></div>
+        </div>
+
+        <!-- Форма -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Вход</h5>
+                <h5 class="modal-title" id="loginModalLabel">Логин</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body">
                 <form id="loginForm">
                     <div class="mb-3">
-                        <label for="loginUsername" class="form-label">Логин</label>
+                        <label for="loginUsername" class="form-label">Почта</label>
                         <input type="text" class="form-control" id="loginUsername" required>
                     </div>
                     <div class="mb-3">
@@ -189,11 +130,12 @@
                         <input type="password" class="form-control" id="loginPassword" required>
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-main">Войти</button>
+                        <button type="submit" class="btn btn-main w-100">Войти</button>
                     </div>
                 </form>
                 <div class="mt-3 text-center">
-                    <small>Нет аккаунта? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Зарегистрируйтесь</a></small>
+                    <small>Забыли пароль? <a href="#" class="text-warning">Перейти</a></small><br>
+                    <small>Ещё нет аккаунта? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Зарегистрироваться</a></small>
                 </div>
             </div>
         </div>
@@ -201,8 +143,18 @@
 </div>
 
 <!-- Модальное окно: Регистрация -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+<div class="modal fade glass-modal" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
+        <!-- КВАДРАТЫ (внешние, выходят за пределы формы) -->
+        <div class="glass-squares">
+            <div class="square square-1"></div>
+            <div class="square square-2"></div>
+            <div class="square square-3"></div>
+            <div class="square square-4"></div>
+            <div class="square square-5"></div>
+        </div>
+
+        <!-- Форма -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
@@ -228,7 +180,7 @@
                         <input type="password" class="form-control" id="registerPasswordConfirm" required>
                     </div>
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-main">Зарегистрироваться</button>
+                        <button type="submit" class="btn btn-main w-100">Зарегистрироваться</button>
                     </div>
                 </form>
                 <div class="mt-3 text-center">

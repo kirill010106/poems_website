@@ -18,13 +18,13 @@
             <!-- Главное меню: центрировано -->
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#" data-page="custom">Удиви меня</a>
+                    <a class="nav-link active" aria-current="page" href="#">Удиви меня</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/pages/poets.html" data-page="poets">Поэты</a>
+                    <a class="nav-link active" aria-current="page" href="pages/poets.html">Поэты</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#" data-page="nothing">Ничего</a>
+                    <a class="nav-link active" aria-current="page" href="#">Ничего</a>
                 </li>
             </ul>
 
@@ -41,70 +41,3 @@
     </div>
 </nav>
     </header>
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Вход</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-            </div>
-            <div class="modal-body">
-                <form id="loginForm">
-                    <div class="mb-3">
-                        <label for="loginUsername" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="loginUsername" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="loginPassword" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="loginPassword" required>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-main">Войти</button>
-                    </div>
-                </form>
-                <div class="mt-3 text-center">
-                    <small>Нет аккаунта? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Зарегистрируйтесь</a></small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Модальное окно: Регистрация -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
-            </div>
-            <div class="modal-body">
-                <form id="registerForm">
-                    <div class="mb-3">
-                        <label for="registerUsername" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="registerUsername" required minlength="3" maxlength="20">
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="registerEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerPassword" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="registerPassword" required minlength="6">
-                        <div class="form-text">Минимум 6 символов</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerPasswordConfirm" class="form-label">Подтвердите пароль</label>
-                        <input type="password" class="form-control" id="registerPasswordConfirm" required>
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-main">Зарегистрироваться</button>
-                    </div>
-                </form>
-                <div class="mt-3 text-center">
-                    <small>Уже есть аккаунт? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Войдите</a></small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

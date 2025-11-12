@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,15 @@
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/bootstrap.bundle.js"></script>
     <script src="../scripts/jquery-3.7.1.min.js"></script>
+    <script src="../scripts/poems-manager.js"></script>
     <script src="../scripts/load-components.js"></script>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
     <div id="header-placeholder"></div>
 
     <main>
@@ -21,87 +27,16 @@
                 <div class="row mb-4">
                     <div class="col text-center">
                         <h2 class="poets-title section-title fw-bold">Наши поэты</h2>
-                        <p class="text-secondary">Подборка выдающихся поэтов. Наведите, чтобы увидеть детали.</p>
+                        <p class="text-secondary" id="poetsCount">Загрузка...</p>
                     </div>
                 </div>
 
-                <div class="row g-4 g-lg-5">
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="#" class="poet-card d-block text-decoration-none">
-                            <div class="poet-thumb d-flex align-items-center justify-content-center">
-                                <img src="/img/poets/pushkin.png" alt="Александр Пушкин" class="poet-image">
-                            </div>
-                            <div class="poet-info">
-                                <h3 class="poet-name h5 mb-1">Александр Пушкин</h3>
-                                <p class="poet-meta mb-0">Классик русской литературы</p>
-                                <span class="btn btn-sm btn-main mt-3">Подробнее</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="#" class="poet-card d-block text-decoration-none">
-                            <div class="poet-thumb d-flex align-items-center justify-content-center">
-                                <img src="/img/poets/esenin.png" alt="Сергей Есенин" class="poet-image">
-                            </div>
-                            <div class="poet-info">
-                                <h3 class="poet-name h5 mb-1">Сергей Есенин</h3>
-                                <p class="poet-meta mb-0">Лирика, природа, Родина</p>
-                                <span class="btn btn-sm btn-main mt-3">Подробнее</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="#" class="poet-card d-block text-decoration-none">
-                            <div class="poet-thumb d-flex align-items-center justify-content-center">
-                                <img src="/img/poets/ahmatova.png" alt="Анна Ахматова" class="poet-image">
-                            </div>
-                            <div class="poet-info">
-                                <h3 class="poet-name h5 mb-1">Анна Ахматова</h3>
-                                <p class="poet-meta mb-0">Серебряный век, женская лирика</p>
-                                <span class="btn btn-sm btn-main mt-3">Подробнее</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="#" class="poet-card d-block text-decoration-none">
-                            <div class="poet-thumb d-flex align-items-center justify-content-center">
-                               <img src="/img/poets/mayakovsky.png" alt="Владимир Маяковский" class="poet-image">
-                            </div>
-                            <div class="poet-info">
-                                <h3 class="poet-name h5 mb-1">Владимир Маяковский</h3>
-                                <p class="poet-meta mb-0">Авангард, футуризм</p>
-                                <span class="btn btn-sm btn-main mt-3">Подробнее</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="#" class="poet-card d-block text-decoration-none">
-                            <div class="poet-thumb d-flex align-items-center justify-content-center">
-                               <img src="/img/poets/lermontov.png" alt="Михаил Лермонтов" class="poet-image">
-                            </div>
-                            <div class="poet-info">
-                                <h3 class="poet-name h5 mb-1">Михаил Лермонтов</h3>
-                                <p class="poet-meta mb-0">Романтизм, философская лирика</p>
-                                <span class="btn btn-sm btn-main mt-3">Подробнее</span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <a href="#" class="poet-card d-block text-decoration-none">
-                            <div class="poet-thumb d-flex align-items-center justify-content-center">
-                                <img src="/img/poets/tsvetaeva.png" alt="Марина Цветаева" class="poet-image">
-                            </div>
-                            <div class="poet-info">
-                                <h3 class="poet-name h5 mb-1">Марина Цветаева</h3>
-                                <p class="poet-meta mb-0">Серебряный век, экспрессия</p>
-                                <span class="btn btn-sm btn-main mt-3">Подробнее</span>
-                            </div>
-                        </a>
+                <div class="row g-4 g-lg-5" id="poetsGrid">
+                    <!-- Загрузка -->
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,5 +44,47 @@
     </main>
 
     <div id="footer-placeholder"></div>
+
+    <script>
+        // Отрисовка карточек поэтов
+        function renderPoets() {
+            const poets = poemsManager.getAllPoets();
+            const grid = document.getElementById('poetsGrid');
+            
+            if (poets.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Поэты не найдены</p></div>';
+                return;
+            }
+
+            // Обновляем счетчик
+            document.getElementById('poetsCount').textContent = 
+                `${poets.length} поэтов в нашей коллекции. Кликните, чтобы узнать больше.`;
+
+            // Рендерим карточки
+            grid.innerHTML = poets.map(poet => {
+                const poemsCount = poemsManager.getPoemsByAuthor(poet.id).length;
+                
+                return `
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <a href="/pages/poet-detail.html?id=${poet.id}" class="poet-card d-block text-decoration-none">
+                            <div class="poet-thumb d-flex align-items-center justify-content-center">
+                                <img src="${poet.image}" alt="${poet.name}" class="poet-image">
+                            </div>
+                            <div class="poet-info">
+                                <h3 class="poet-name h5 mb-1">${poet.name}</h3>
+                                <p class="poet-meta mb-0">${poet.description}</p>
+                                <p class="poet-years text-muted mt-2 mb-0">${poet.birthYear}—${poet.deathYear}</p>
+                                <p class="poet-count text-muted mb-2"><small>${poemsCount} стихотворений</small></p>
+                                <span class="btn btn-sm btn-main mt-2">Подробнее</span>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Инициализация после загрузки данных
+        document.addEventListener('poemsDataLoaded', renderPoets);
+    </script>
 </body>
 </html>

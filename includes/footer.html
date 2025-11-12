@@ -27,28 +27,19 @@
     </footer>
 
     <!-- Модальное окно: Вход -->
-<div class="modal fade glass-modal" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <!-- КВАДРАТЫ (внешние, выходят за пределы формы) -->
-        <div class="glass-squares">
-            <div class="square square-1"></div>
-            <div class="square square-2"></div>
-            <div class="square square-3"></div>
-            <div class="square square-4"></div>
-            <div class="square square-5"></div>
-        </div>
-
-        <!-- Форма -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Логин</h5>
+                <h5 class="modal-title" id="loginModalLabel">Вход</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body">
+                <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
                 <form id="loginForm">
                     <div class="mb-3">
-                        <label for="loginUsername" class="form-label">Почта</label>
-                        <input type="text" class="form-control" id="loginUsername" required>
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="loginEmail" required>
                     </div>
                     <div class="mb-3">
                         <label for="loginPassword" class="form-label">Пароль</label>
@@ -59,7 +50,6 @@
                     </div>
                 </form>
                 <div class="mt-3 text-center">
-                    <small>Забыли пароль? <a href="#" class="text-warning">Перейти</a></small><br>
                     <small>Ещё нет аккаунта? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Зарегистрироваться</a></small>
                 </div>
             </div>
@@ -68,28 +58,21 @@
 </div>
 
 <!-- Модальное окно: Регистрация -->
-<div class="modal fade glass-modal" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <!-- КВАДРАТЫ (внешние, выходят за пределы формы) -->
-        <div class="glass-squares">
-            <div class="square square-1"></div>
-            <div class="square square-2"></div>
-            <div class="square square-3"></div>
-            <div class="square square-4"></div>
-            <div class="square square-5"></div>
-        </div>
-
-        <!-- Форма -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body">
+                <div id="registerError" class="alert alert-danger d-none" role="alert"></div>
+                <div id="registerSuccess" class="alert alert-success d-none" role="alert"></div>
                 <form id="registerForm">
                     <div class="mb-3">
-                        <label for="registerUsername" class="form-label">Логин</label>
+                        <label for="registerUsername" class="form-label">Имя пользователя</label>
                         <input type="text" class="form-control" id="registerUsername" required minlength="3" maxlength="20">
+                        <div class="form-text">От 3 до 20 символов</div>
                     </div>
                     <div class="mb-3">
                         <label for="registerEmail" class="form-label">Email</label>

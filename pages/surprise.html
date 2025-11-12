@@ -1,161 +1,240 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="../styles/bootstrap.css">
     <link rel="stylesheet" href="../styles/styles.css">
-    <title>Сборник стихов - Удиви меня</title>
+    <title>Удиви меня — Сборник стихов</title>
     <script src="../scripts/theme.js"></script>
     <script src="../scripts/bootstrap.bundle.js"></script>
     <script src="../scripts/jquery-3.7.1.min.js"></script>
     <script src="../scripts/load-components.js"></script>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
     <div id="header-placeholder"></div>
 
     <main>
         <section class="surprise-section py-5">
-    <div class="container">
-        <div class="row justify-content-center mb-4">
-            <div class="col-auto text-center">
-                <h2 class="display-heading fw-bold">Удиви меня</h2>
-                <p class="text-secondary">Интересные факты о поэзии и поэтах</p>
-            </div>
-        </div>
+            <div class="container">
+                <!-- Заголовок -->
+                <div class="row justify-content-center mb-5">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="display-4 fw-bold mb-3">🎭 Удиви меня</h2>
+                        <p class="lead text-secondary mb-4">Интересные факты о поэзии и великих русских поэтах</p>
+                        
+                        <!-- Кнопки управления -->
+                        <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+                            <button id="showRandomFact" class="btn btn-main">
+                                🎲 Случайный факт
+                            </button>
+                            <button id="showAllFacts" class="btn btn-outline-secondary">
+                                📚 Показать все
+                            </button>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                    📂 Категория
+                                </button>
+                                <ul class="dropdown-menu" id="categoryFilter">
+                                    <li><a class="dropdown-item" href="#" data-category="all">Все категории</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" data-category="history">📜 История</a></li>
+                                    <li><a class="dropdown-item" href="#" data-category="biography">👤 Биография</a></li>
+                                    <li><a class="dropdown-item" href="#" data-category="creative">✍️ Творчество</a></li>
+                                    <li><a class="dropdown-item" href="#" data-category="talent">🎨 Таланты</a></li>
+                                    <li><a class="dropdown-item" href="#" data-category="influence">🌟 Влияние</a></li>
+                                    <li><a class="dropdown-item" href="#" data-category="record">🏆 Рекорды</a></li>
+                                </ul>
+                            </div>
+                        </div>
 
-        <div class="row g-4 justify-content-center">
-            <!-- Карточка 1 -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="surprise-card glass-card">
-                    <div class="card-gradient-bg gradient-red"></div>
-                    <div class="card-content">
-                        <h3>Факт!</h3>
-                        <p>Любое стихотворение Пушкина можно прочитать на одном дыхании — он писал так, чтобы слова ложились на музыку.</p>
-                        <button class="btn btn-sm btn-main">Подробнее</button>
+                        <!-- Счетчик и статистика -->
+                        <div class="text-muted small">
+                            <span id="factCounter">Загрузка...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Сетка с фактами -->
+                <div class="row g-4" id="factsGrid">
+                    <!-- Загрузка -->
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Карточка 2 -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="surprise-card glass-card">
-                    <div class="card-gradient-bg gradient-purple"></div>
-                    <div class="card-content">
-                        <h3>Факт!</h3>
-                        <p>Есенин написал «Письмо к женщине» за один вечер, а потом перечитывал его каждый день — это был его любимый стих.</p>
-                        <button class="btn btn-sm btn-main">Подробнее</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Карточка 3 -->
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="surprise-card glass-card">
-                    <div class="card-gradient-bg gradient-teal"></div>
-                    <div class="card-content">
-                        <h3>Факт!</h3>
-                        <p>Цветаева начала писать стихи в 6 лет, а её первое стихотворение было опубликовано, когда ей было всего 12.</p>
-                        <button class="btn btn-sm btn-main">Подробнее</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ГРУППА 4: Flexbox + Transform + Filter -->
-<section class="fact-group-4 py-5">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col text-center">
-                <h2 class="section-title fw-bold">Интересные факты о поэзии</h2>
-                <p class="text-secondary">Наведите, чтобы узнать больше</p>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-center gap-4 flex-wrap">
-            <!-- Карточка 1 -->
-            <div class="fact-card fact-card-4">
-                <div class="card-number bg-orange">01</div>
-                <div class="card-content">
-                    <h3>Факт №1</h3>
-                    <p>Пушкин написал «Евгения Онегина» за 8 лет — это его самое большое произведение.</p>
-                    <button class="btn btn-sm btn-main">Подробнее</button>
-                </div>
-            </div>
-
-            <!-- Карточка 2 -->
-            <div class="fact-card fact-card-4">
-                <div class="card-number bg-pink">02</div>
-                <div class="card-content">
-                    <h3>Факт №2</h3>
-                    <p>Есенин был первым поэтом, чьи стихи были опубликованы в газете «Правда».</p>
-                    <button class="btn btn-sm btn-main">Подробнее</button>
-                </div>
-            </div>
-
-            <!-- Карточка 3 -->
-            <div class="fact-card fact-card-4">
-                <div class="card-number bg-purple">03</div>
-                <div class="card-content">
-                    <h3>Факт №3</h3>
-                    <p>Цветаева писала стихи даже в военное время — её тетради сохранились до сих пор.</p>
-                    <button class="btn btn-sm btn-main">Подробнее</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ГРУППА 5: Transition + Transform + ::before + Лучи -->
-<section class="fact-group-5 py-5">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col text-center">
-                <h2 class="section-title fw-bold">Загадки поэзии</h2>
-                <p class="text-secondary">Наведите, чтобы раскрыть секрет</p>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-center gap-4 flex-wrap">
-            <!-- Карточка 1 -->
-            <div class="fact-card fact-card-5">
-                <div class="card-header">
-                    <span class="card-title">Заголовок 1</span>
-                </div>
-                <div class="card-content">
-                    <p>Поэзия — это музыка слов. В русской поэзии есть особый ритм, который называется «ямб».</p>
-                    <button class="btn btn-sm btn-main">Подробнее</button>
-                </div>
-            </div>
-
-            <!-- Карточка 2 -->
-            <div class="fact-card fact-card-5">
-                <div class="card-header">
-                    <span class="card-title">Заголовок 2</span>
-                </div>
-                <div class="card-content">
-                    <p>Слово «поэт» происходит от греческого «поэо» — значит «творить», «создавать».</p>
-                    <button class="btn btn-sm btn-main">Подробнее</button>
-                </div>
-            </div>
-
-            <!-- Карточка 3 -->
-            <div class="fact-card fact-card-5">
-                <div class="card-header">
-                    <span class="card-title">Заголовок 3</span>
-                </div>
-                <div class="card-content">
-                    <p>Все великие поэты начинали с малого — даже Пушкин писал стихи в детстве.</p>
-                    <button class="btn btn-sm btn-main">Подробнее</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
     </main>
 
     <div id="footer-placeholder"></div>
+
+    <script>
+        // Менеджер фактов
+        class FactsManager {
+            constructor() {
+                this.facts = [];
+                this.currentCategory = 'all';
+            }
+
+            async loadFacts() {
+                try {
+                    const response = await fetch('../data/facts.json');
+                    const data = await response.json();
+                    this.facts = data.facts;
+                    console.log(`✅ Загружено ${this.facts.length} фактов`);
+                    return this.facts;
+                } catch (error) {
+                    console.error('Ошибка загрузки фактов:', error);
+                    return [];
+                }
+            }
+
+            getFactsByCategory(category) {
+                if (category === 'all') return this.facts;
+                return this.facts.filter(fact => fact.category === category);
+            }
+
+            getRandomFact() {
+                const availableFacts = this.getFactsByCategory(this.currentCategory);
+                if (availableFacts.length === 0) return null;
+                
+                const randomIndex = Math.floor(Math.random() * availableFacts.length);
+                return availableFacts[randomIndex];
+            }
+
+            getRandomUniqueFacts(count = 3) {
+                const availableFacts = this.getFactsByCategory(this.currentCategory);
+                const shuffled = [...availableFacts].sort(() => Math.random() - 0.5);
+                return shuffled.slice(0, Math.min(count, shuffled.length));
+            }
+        }
+
+        const factsManager = new FactsManager();
+
+        // Отрисовка карточки факта
+        function renderFactCard(fact) {
+            const categoryNames = {
+                'history': 'История',
+                'biography': 'Биография',
+                'creative': 'Творчество',
+                'talent': 'Таланты',
+                'influence': 'Влияние',
+                'record': 'Рекорды'
+            };
+            const categoryEmoji = {
+                'history': '📜',
+                'biography': '👤',
+                'creative': '✍️',
+                'talent': '🎨',
+                'influence': '🌟',
+                'record': '🏆'
+            };
+
+            return `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="surprise-card" data-fact-id="${fact.id}" data-category="${fact.category}">
+                        <div class="card-content">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge">${categoryEmoji[fact.category] || '📖'} ${categoryNames[fact.category] || fact.category}</span>
+                                <span class="text-muted small">#${fact.id}</span>
+                            </div>
+                            <h3 class="h5 fw-bold mb-3">${fact.title}</h3>
+                            <p class="mb-0">${fact.text}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Отрисовка всех фактов
+        function renderFacts(facts) {
+            const grid = document.getElementById('factsGrid');
+            
+            if (facts.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted fs-5">😔 Фактов в этой категории не найдено</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = facts.map(fact => renderFactCard(fact)).join('');
+            
+            // Анимация появления
+            setTimeout(() => {
+                document.querySelectorAll('.surprise-card').forEach((card, i) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.4s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, i * 80);
+                });
+            }, 50);
+        }
+
+        // Обновление счетчика
+        function updateCounter() {
+            const counter = document.getElementById('factCounter');
+            const total = factsManager.facts.length;
+            const filtered = factsManager.getFactsByCategory(factsManager.currentCategory).length;
+            
+            if (factsManager.currentCategory === 'all') {
+                counter.textContent = `📊 Всего фактов: ${total}`;
+            } else {
+                counter.textContent = `📊 Показано: ${filtered} из ${total} фактов`;
+            }
+        }
+
+        // Обработчики событий
+        document.getElementById('showRandomFact')?.addEventListener('click', () => {
+            const facts = factsManager.getRandomUniqueFacts(3);
+            renderFacts(facts);
+            updateCounter();
+        });
+
+        document.getElementById('showAllFacts')?.addEventListener('click', () => {
+            const facts = factsManager.getFactsByCategory(factsManager.currentCategory);
+            renderFacts(facts);
+            updateCounter();
+        });
+
+        // Фильтр по категориям
+        document.getElementById('categoryFilter')?.addEventListener('click', (e) => {
+            if (e.target.classList.contains('dropdown-item')) {
+                e.preventDefault();
+                const category = e.target.dataset.category;
+                factsManager.currentCategory = category;
+                
+                const facts = factsManager.getFactsByCategory(category);
+                renderFacts(facts);
+                updateCounter();
+            }
+        });
+
+        // Инициализация
+        async function init() {
+            await factsManager.loadFacts();
+            
+            // Показываем 6 случайных фактов при загрузке
+            const initialFacts = factsManager.getRandomUniqueFacts(6);
+            renderFacts(initialFacts);
+            updateCounter();
+        }
+
+        // Запуск после загрузки DOM
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
+</html>

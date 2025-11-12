@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Поэт — Сборник стихов</title>
+    <script src="../scripts/theme.js"></script>
+    <script src="../scripts/bootstrap.bundle.js"></script>
+    <script src="../scripts/jquery-3.7.1.min.js"></script>
+    <script src="../scripts/poems-manager.js"></script>
+    <script src="../scripts/load-components.js"></script>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div id="header-placeholder"></div>
+
+    <main>
+        <!-- Загрузка -->
+        <div id="loadingSection" class="container py-5 text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+            <p class="mt-3 text-muted">Загружаем информацию о поэте...</p>
+        </div>
+
+        <!-- Контент поэта -->
+        <div id="poetContent" style="display: none;">
+            <!-- Герой секция с фото и основной информацией -->
+            <section class="poet-hero py-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-4 mb-4 mb-lg-0 text-center">
+                            <img id="poetImage" src="" alt="" class="poet-detail-image img-fluid rounded shadow" style="cursor: pointer;">
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h1 id="poetName" class="display-4 fw-bold mb-0"></h1>
+                                <button id="poetFavoriteBtn" class="btn btn-lg btn-link text-secondary" title="Добавить в избранное">
+                                    🤍
+                                </button>
+                            </div>
+                            <p id="poetYears" class="lead text-muted mb-3"></p>
+                            <p id="poetDescription" class="mb-4"></p>
+                            
+                            <div class="poet-meta-info">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="info-card">
+                                            <span class="info-label">Период:</span>
+                                            <span id="poetPeriod" class="info-value"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-card">
+                                            <span class="info-label">Стиль:</span>
+                                            <span id="poetStyle" class="info-value"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Биография -->
+            <section class="poet-bio py-5 bg-light-subtle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <h2 class="section-title fw-bold mb-4">Биография</h2>
+                            <p id="poetBio" class="lead"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Известные произведения -->
+            <section class="poet-works py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <h2 class="section-title fw-bold mb-4">Известные произведения</h2>
+                            <ul id="famousWorksList" class="famous-works-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Статистика -->
+            <section class="poet-stats py-5 bg-light-subtle">
+                <div class="container">
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <div class="stat-card">
+                                <h3 id="statsPoems" class="stat-number">0</h3>
+                                <p class="stat-label">Стихотворений в коллекции</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="stat-card">
+                                <h3 id="statsAvgYear" class="stat-number">—</h3>
+                                <p class="stat-label">Средний год написания</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="stat-card">
+                                <h3 id="statsTags" class="stat-number">0</h3>
+                                <p class="stat-label">Уникальных тем</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Стихи поэта -->
+            <section class="poet-poems py-5">
+                <div class="container">
+                    <h2 class="section-title fw-bold mb-4">Стихотворения</h2>
+                    <div class="row g-4" id="poetPoemsGrid">
+                        <!-- Карточки стихов будут добавлены через JS -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Ошибка -->
+        <div id="errorSection" class="container py-5 text-center" style="display: none;">
+            <h2 class="text-danger mb-3">❌ Поэт не найден</h2>
+            <p class="text-muted mb-4">К сожалению, информация о данном поэте не найдена.</p>
+            <a href="/pages/poets.html" class="btn btn-main">Вернуться к списку поэтов</a>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- Audio для пасхалки -->
+    <audio id="easterEggAudio" style="display: none;">
+        <source src="../audio/rammstein-intro.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let poemModalInstance = null;
+        let isEasterEggActive = false;
+        let originalPoetData = null;
+
+        // Till Lindemann Easter Egg Data
+        const tillLindemannData = {
+            id: "lindemann",
+            name: "Тилль Линдеманн",
+            fullName: "Тилль Линдеманн",
+            birthYear: 1963,
+            deathYear: null,
+            image: "/img/poets/lindemann.png",
+            description: "Немецкий поэт-индустриалист, мастер метафоры и провокации",
+            bio: "Тилль Линдеманн — немецкий поэт, музыкант и актёр, фронтмен группы Rammstein. Его творчество отличается мощной образностью, философской глубиной и смелым использованием метафор. Линдеманн также известен как автор нескольких сборников стихов, где исследует темы любви, смерти, страсти и человеческой природы.",
+            period: "Современность",
+            style: "Индустриальная поэзия, экспрессионизм",
+            famousWorks: ["Messer", "In stillen Nächten", "100 Gedichte", "Стихи на немецком"]
+        };
+
+        // Тексты песен (безопасные фрагменты)
+        const tillPoems = [
+            {
+                id: 9001,
+                title: "Sonne",
+                author: "Тилль Линдеманн",
+                authorId: "lindemann",
+                year: 2001,
+                text: "Все ждут солнца\nВсе боятся света\nСчёт идёт на десять\nВсе ждут здесь\n\nСолнце светит из моих рук\nМожет гореть\nМожет ослепить\nКогда оно прорывается из кулаков",
+                tags: ["сила", "метафора", "свет"],
+                mood: "passionate"
+            },
+            {
+                id: 9002,
+                title: "Ich will",
+                author: "Тилль Линдеманн",
+                authorId: "lindemann",
+                year: 2001,
+                text: "Я хочу, чтобы вы мне верили\nЯ хочу, чтобы вы мне доверяли\nЯ хочу чувствовать ваши взгляды\nЯ хочу контролировать каждое ваше дыхание\n\nЯ хочу слышать ваши голоса\nЯ хочу нарушать тишину\nЯ хочу видеть ваши руки\nЯ хочу погрузиться в вашу лихорадку",
+                tags: ["желание", "контроль", "страсть"],
+                mood: "passionate"
+            },
+            {
+                id: 9003,
+                title: "Ohne Dich",
+                author: "Тилль Линдеманн",
+                authorId: "lindemann",
+                year: 2004,
+                text: "Я иду по твоим следам\nСнег спокойно падает\nНе остаётся ни одного отпечатка\nОт твоих лыж\n\nБез тебя я не могу существовать\nБез тебя мне так тяжело\nБез тебя я совсем один\nБез тебя",
+                tags: ["любовь", "одиночество", "зима"],
+                mood: "melancholic"
+            },
+            {
+                id: 9004,
+                title: "Mutter",
+                author: "Тилль Линдеманн",
+                authorId: "lindemann",
+                year: 2001,
+                text: "Не дали мне жизни\nНе вырвали из чрева\nВ венах не течёт пуповинная кровь\nМать, дай мне силу\n\nНе дано мне никакого сердца\nИ голос мне никто не дал\nЯ слышу голоса только во сне\nМама, мне холодно",
+                tags: ["происхождение", "философия", "тоска"],
+                mood: "melancholic"
+            }
+        ];
+
+        // Получаем ID поэта из URL
+        function getPoetIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Функция для очистки backdrop'ов
+        function cleanupBackdrops() {
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                backdrop.remove();
+            });
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+
+        // Показать стихотворение в модальном окне
+        function showPoemModal(poemId) {
+            const poem = poemsManager.getPoemById(poemId);
+            if (!poem) return;
+
+            let modal = document.getElementById('poemModal');
+            if (!modal) {
+                const modalHTML = `
+                    <div class="modal fade" id="poemModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="poemModalTitle"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-muted" id="poemModalAuthor"></p>
+                                    <div id="poemModalText" style="white-space: pre-line; line-height: 1.8;"></div>
+                                    <div id="poemModalTags" class="mt-3"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                modal = document.getElementById('poemModal');
+                poemModalInstance = new bootstrap.Modal(modal);
+                modal.addEventListener('hidden.bs.modal', cleanupBackdrops);
+            }
+
+            document.getElementById('poemModalTitle').textContent = poem.title;
+            document.getElementById('poemModalAuthor').textContent = `${poem.author}, ${poem.year || 'год неизвестен'}`;
+            document.getElementById('poemModalText').textContent = poem.text;
+            document.getElementById('poemModalTags').innerHTML = poem.tags.map(tag => 
+                `<span class="badge bg-secondary me-1">${tag}</span>`
+            ).join('');
+
+            poemModalInstance.show();
+        }
+
+        // Отрисовка информации о поэте
+        function renderPoetDetails(poetId) {
+            const poet = poemsManager.getPoetById(poetId);
+            
+            if (!poet) {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('errorSection').style.display = 'block';
+                return;
+            }
+
+            // Основная информация
+            document.getElementById('poetImage').src = poet.image;
+            document.getElementById('poetImage').alt = poet.name;
+            document.getElementById('poetName').textContent = poet.fullName;
+            document.getElementById('poetYears').textContent = `${poet.birthYear} — ${poet.deathYear}`;
+            document.getElementById('poetDescription').textContent = poet.description;
+            document.getElementById('poetPeriod').textContent = poet.period;
+            document.getElementById('poetStyle').textContent = poet.style;
+            document.getElementById('poetBio').textContent = poet.bio;
+
+            // Известные произведения
+            const worksList = document.getElementById('famousWorksList');
+            worksList.innerHTML = poet.famousWorks.map(work => 
+                `<li>${work}</li>`
+            ).join('');
+
+            // Статистика
+            const stats = poemsManager.getAuthorStats(poetId);
+            document.getElementById('statsPoems').textContent = stats.totalPoems;
+            document.getElementById('statsAvgYear').textContent = stats.averageYear || '—';
+            document.getElementById('statsTags').textContent = Object.keys(stats.tags).length;
+
+            // Стихи поэта
+            const poems = poemsManager.getPoemsByAuthor(poetId);
+            const grid = document.getElementById('poetPoemsGrid');
+            
+            grid.innerHTML = poems.map(poem => {
+                const isFavorite = favoritesManager.isPoemFavorite(poem.id);
+                return `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="poem-card">
+                        <div class="poem-card-header">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="poem-card-title">${poem.title}</h3>
+                                    ${poem.year ? `<span class="poem-card-year">${poem.year}</span>` : ''}
+                                </div>
+                                <button class="btn btn-sm btn-link favorite-toggle-btn ${isFavorite ? 'text-danger' : 'text-secondary'}" 
+                                        data-poem-id="${poem.id}" 
+                                        title="${isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}">
+                                    ${isFavorite ? '❤️' : '🤍'}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="poem-card-body">
+                            <p class="poem-card-preview">${poem.text.substring(0, 100)}...</p>
+                        </div>
+                        <div class="poem-card-footer">
+                            <div class="poem-tags">
+                                ${poem.tags.map(tag => `<span class="badge bg-secondary">${tag}</span>`).join(' ')}
+                            </div>
+                            <button class="btn btn-sm btn-main read-poem-btn" data-poem-id="${poem.id}">
+                                Читать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            // Добавляем обработчики
+            document.querySelectorAll('.read-poem-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const poemId = parseInt(e.target.dataset.poemId);
+                    showPoemModal(poemId);
+                });
+            });
+
+            // Добавляем обработчики для кнопок избранного
+            document.querySelectorAll('.favorite-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const poemId = parseInt(e.target.dataset.poemId);
+                    const isFavorite = favoritesManager.togglePoem(poemId);
+                    
+                    e.target.textContent = isFavorite ? '❤️' : '🤍';
+                    e.target.className = `btn btn-sm btn-link favorite-toggle-btn ${isFavorite ? 'text-danger' : 'text-secondary'}`;
+                    e.target.title = isFavorite ? 'Удалить из избранного' : 'Добавить в избранное';
+                });
+            });
+
+            // Обработчик для кнопки избранного поэта
+            const poetFavoriteBtn = document.getElementById('poetFavoriteBtn');
+            const isPoetFavorite = favoritesManager.isPoetFavorite(poetId);
+            poetFavoriteBtn.textContent = isPoetFavorite ? '❤️' : '🤍';
+            poetFavoriteBtn.className = `btn btn-lg btn-link ${isPoetFavorite ? 'text-danger' : 'text-secondary'}`;
+            poetFavoriteBtn.title = isPoetFavorite ? 'Удалить из избранного' : 'Добавить в избранное';
+            
+            poetFavoriteBtn.addEventListener('click', () => {
+                const isFav = favoritesManager.togglePoet(poetId);
+                poetFavoriteBtn.textContent = isFav ? '❤️' : '🤍';
+                poetFavoriteBtn.className = `btn btn-lg btn-link ${isFav ? 'text-danger' : 'text-secondary'}`;
+                poetFavoriteBtn.title = isFav ? 'Удалить из избранного' : 'Добавить в избранное';
+            });
+
+            // Обновляем title страницы
+            document.title = `${poet.name} — Сборник стихов`;
+
+            // Показываем контент
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('poetContent').style.display = 'block';
+
+            // Easter Egg: Пастернак -> Линдеманн
+            if (poetId === 'pasternak') {
+                setupPasternakEasterEgg();
+            }
+        }
+
+        // Пасхалка: превращение Пастернака в Тилля Линдеманна
+        function setupPasternakEasterEgg() {
+            const poetImage = document.getElementById('poetImage');
+            let clickCount = 0;
+            
+            // Добавляем тонкий намек (пульсацию) с небольшой задержкой для уверенности
+            setTimeout(() => {
+                poetImage.classList.add('easter-egg-hint');
+                console.log('🔥 Easter egg hint activated for Pasternak!');
+            }, 100);
+            
+            poetImage.addEventListener('click', () => {
+                clickCount++;
+                
+                if (clickCount === 1 && !isEasterEggActive) {
+                    // Сохраняем оригинальные данные
+                    originalPoetData = {
+                        id: 'pasternak',
+                        name: document.getElementById('poetName').textContent,
+                        years: document.getElementById('poetYears').textContent,
+                        description: document.getElementById('poetDescription').textContent,
+                        period: document.getElementById('poetPeriod').textContent,
+                        style: document.getElementById('poetStyle').textContent,
+                        bio: document.getElementById('poetBio').textContent,
+                        works: Array.from(document.querySelectorAll('#famousWorksList li')).map(li => li.textContent),
+                        image: poetImage.src
+                    };
+                    
+                    // Запускаем превращение
+                    activateEasterEgg();
+                    clickCount = 0; // Сброс для возврата
+                } else if (isEasterEggActive) {
+                    // Возврат к Пастернаку
+                    deactivateEasterEgg();
+                    clickCount = 0;
+                }
+            });
+        }
+
+        // Активация пасхалки
+        function activateEasterEgg() {
+            isEasterEggActive = true;
+            
+            // МЕТАЛЛИЧЕСКИЙ РЕЖИМ! 🔥🤘
+            document.body.classList.add('metal-mode');
+            document.querySelector('main').classList.add('metal-mode');
+            
+            // Добавляем класс для анимации
+            const heroSection = document.querySelector('.poet-hero');
+            heroSection.style.transition = 'all 0.5s ease';
+            heroSection.style.opacity = '0';
+            heroSection.style.transform = 'scale(0.95)';
+            
+            // Играем музыку
+            const audio = document.getElementById('easterEggAudio');
+            audio.volume = 0.4; // Увеличиваем громкость для агрессивности
+            audio.play().catch(e => console.log('Автовоспроизведение заблокировано'));
+            
+            setTimeout(() => {
+                // Меняем данные
+                document.getElementById('poetName').textContent = tillLindemannData.name;
+                document.getElementById('poetYears').textContent = `${tillLindemannData.birthYear} — настоящее время`;
+                document.getElementById('poetDescription').textContent = tillLindemannData.description;
+                document.getElementById('poetPeriod').textContent = tillLindemannData.period;
+                document.getElementById('poetStyle').textContent = tillLindemannData.style;
+                document.getElementById('poetBio').textContent = tillLindemannData.bio;
+                document.getElementById('poetImage').src = tillLindemannData.image;
+                document.getElementById('poetImage').alt = tillLindemannData.name;
+                
+                // Меняем известные произведения
+                const worksList = document.getElementById('famousWorksList');
+                worksList.innerHTML = tillLindemannData.famousWorks.map(work => 
+                    `<li>${work}</li>`
+                ).join('');
+                
+                // Меняем статистику
+                document.getElementById('statsPoems').textContent = tillPoems.length;
+                document.getElementById('statsAvgYear').textContent = '2001';
+                document.getElementById('statsTags').textContent = '9';
+                
+                // Меняем стихи на тексты песен
+                const grid = document.getElementById('poetPoemsGrid');
+                grid.innerHTML = tillPoems.map(poem => {
+                    return `
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="poem-card" style="border-left: 4px solid #ff0000;">
+                            <div class="poem-card-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h3 class="poem-card-title">${poem.title}</h3>
+                                        ${poem.year ? `<span class="poem-card-year">${poem.year}</span>` : ''}
+                                    </div>
+                                    <span style="font-size: 1.5rem;">🔥</span>
+                                </div>
+                            </div>
+                            <div class="poem-card-body">
+                                <p class="poem-card-preview">${poem.text.substring(0, 120)}...</p>
+                            </div>
+                            <div class="poem-card-footer">
+                                <div class="poem-tags">
+                                    ${poem.tags.map(tag => `<span class="badge bg-danger">${tag}</span>`).join(' ')}
+                                </div>
+                                <button class="btn btn-sm btn-danger read-till-poem-btn" data-poem-id="${poem.id}">
+                                    Читать
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                }).join('');
+                
+                // Добавляем обработчики для кнопок чтения
+                document.querySelectorAll('.read-till-poem-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const poemId = parseInt(e.target.dataset.poemId);
+                        showTillPoemModal(poemId);
+                    });
+                });
+                
+                // Возвращаем видимость с анимацией
+                heroSection.style.opacity = '1';
+                heroSection.style.transform = 'scale(1)';
+                
+                // Меняем title
+                document.title = `${tillLindemannData.name} — Сборник стихов`;
+                
+                // Добавляем уведомление
+                showEasterEggNotification();
+            }, 500);
+        }
+
+        // Деактивация пасхалки
+        function deactivateEasterEgg() {
+            isEasterEggActive = false;
+            
+            // Убираем металлический режим
+            document.body.classList.remove('metal-mode');
+            document.querySelector('main').classList.remove('metal-mode');
+            
+            const heroSection = document.querySelector('.poet-hero');
+            heroSection.style.transition = 'all 0.5s ease';
+            heroSection.style.opacity = '0';
+            heroSection.style.transform = 'scale(0.95)';
+            
+            // Останавливаем музыку
+            const audio = document.getElementById('easterEggAudio');
+            audio.pause();
+            audio.currentTime = 0;
+            
+            setTimeout(() => {
+                // Возвращаем оригинальные данные
+                document.getElementById('poetName').textContent = originalPoetData.name;
+                document.getElementById('poetYears').textContent = originalPoetData.years;
+                document.getElementById('poetDescription').textContent = originalPoetData.description;
+                document.getElementById('poetPeriod').textContent = originalPoetData.period;
+                document.getElementById('poetStyle').textContent = originalPoetData.style;
+                document.getElementById('poetBio').textContent = originalPoetData.bio;
+                document.getElementById('poetImage').src = originalPoetData.image;
+                document.getElementById('poetImage').alt = originalPoetData.name;
+                
+                const worksList = document.getElementById('famousWorksList');
+                worksList.innerHTML = originalPoetData.works.map(work => 
+                    `<li>${work}</li>`
+                ).join('');
+                
+                // Восстанавливаем оригинальные стихи
+                renderPoetDetails('pasternak');
+                
+                heroSection.style.opacity = '1';
+                heroSection.style.transform = 'scale(1)';
+                
+                document.title = `${originalPoetData.name} — Сборник стихов`;
+            }, 500);
+        }
+
+        // Показать текст песни в модальном окне
+        function showTillPoemModal(poemId) {
+            const poem = tillPoems.find(p => p.id === poemId);
+            if (!poem) return;
+
+            let modal = document.getElementById('poemModal');
+            if (!modal) {
+                const modalHTML = `
+                    <div class="modal fade" id="poemModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="border-bottom: 3px solid #ff0000;">
+                                    <h5 class="modal-title" id="poemModalTitle"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-muted" id="poemModalAuthor"></p>
+                                    <div id="poemModalText" style="white-space: pre-line; line-height: 1.8;"></div>
+                                    <div id="poemModalTags" class="mt-3"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                modal = document.getElementById('poemModal');
+                
+                modal.addEventListener('hidden.bs.modal', cleanupBackdrops);
+                poemModalInstance = new bootstrap.Modal(modal);
+            }
+
+            document.getElementById('poemModalTitle').textContent = poem.title;
+            document.getElementById('poemModalAuthor').textContent = `${poem.author}, ${poem.year}`;
+            document.getElementById('poemModalText').textContent = poem.text;
+            
+            const tagsHTML = poem.tags.map(tag => 
+                `<span class="badge bg-danger me-1">${tag}</span>`
+            ).join('');
+            document.getElementById('poemModalTags').innerHTML = tagsHTML;
+
+            if (!poemModalInstance) {
+                poemModalInstance = new bootstrap.Modal(modal);
+            }
+            poemModalInstance.show();
+        }
+
+        // Уведомление о пасхалке
+        function showEasterEggNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                background: linear-gradient(135deg, #ff0000, #990000, #ff0000);
+                background-size: 200% 200%;
+                color: white;
+                padding: 40px 60px;
+                border-radius: 20px;
+                border: 4px solid #ffff00;
+                box-shadow: 0 0 50px rgba(255,0,0,0.8),
+                            0 0 100px rgba(255,0,0,0.6),
+                            inset 0 0 30px rgba(255,255,0,0.3);
+                z-index: 99999;
+                font-weight: bold;
+                font-size: 2rem;
+                text-align: center;
+                animation: metalNotification 0.5s ease forwards, fireBackground 2s ease infinite;
+                text-shadow: 3px 3px 6px rgba(0,0,0,0.8),
+                            0 0 20px rgba(255,255,0,0.6);
+            `;
+            notification.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 10px;">🔥🤘🔥</div>
+                <div style="letter-spacing: 3px;">METAL MODE</div>
+                <div style="font-size: 1.5rem; margin-top: 10px;">ACTIVATED!</div>
+                <div style="font-size: 0.9rem; margin-top: 20px; font-weight: normal; opacity: 0.8;">
+                    Нажмите на фото для возврата
+                </div>
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes metalNotification {
+                    0% { 
+                        transform: translate(-50%, -50%) scale(0) rotate(-180deg); 
+                        opacity: 0; 
+                    }
+                    50% { 
+                        transform: translate(-50%, -50%) scale(1.2) rotate(10deg); 
+                    }
+                    100% { 
+                        transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+                        opacity: 1; 
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transition = 'all 0.6s ease';
+                notification.style.transform = 'translate(-50%, -50%) scale(0) rotate(180deg)';
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 600);
+            }, 3000);
+        }
+
+        // Инициализация
+        document.addEventListener('poemsDataLoaded', () => {
+            const poetId = getPoetIdFromURL();
+            if (poetId) {
+                renderPoetDetails(poetId);
+            } else {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('errorSection').style.display = 'block';
+            }
+        });
+    </script>
+
+    <style>
+        /* Стили для детальной страницы поэта */
+        .poet-detail-image {
+            max-width: 300px;
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* Явные цвета для основных элементов */
+        #poetName {
+            color: var(--text-primary) !important;
+        }
+
+        #poetYears {
+            color: var(--text-secondary) !important;
+        }
+
+        #poetDescription,
+        #poetBio {
+            color: var(--text-primary) !important;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .section-title {
+            color: var(--text-primary) !important;
+        }
+
+        .poet-hero h1 {
+            color: var(--text-primary) !important;
+        }
+
+        .info-card {
+            padding: 1rem;
+            background: var(--bg-primary);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        [data-theme="dark"] .info-card {
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .info-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary) !important;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary) !important;
+        }
+
+        .famous-works-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .famous-works-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+            color: var(--text-primary) !important;
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .famous-works-list li {
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .famous-works-list li:last-child {
+            border-bottom: none;
+        }
+
+        .famous-works-list li:before {
+            content: "📖 ";
+            margin-right: 0.5rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] .stat-card {
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary) !important;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .bg-light-subtle {
+            background: var(--section-bg) !important;
+            color: var(--section-text) !important;
+        }
+
+        /* ТЁМНАЯ ТЕМА - максимальная специфичность */
+        [data-theme="dark"] .poet-bio.bg-light-subtle {
+            background-color: #1e1e1e !important;
+        }
+
+        [data-theme="dark"] section.bg-light-subtle {
+            background-color: #1e1e1e !important;
+        }
+
+        [data-theme="dark"] .bg-light-subtle {
+            background-color: #1e1e1e !important;
+        }
+
+        /* Текст в тёмной теме */
+        [data-theme="dark"] .poet-bio h2,
+        [data-theme="dark"] .poet-bio .section-title {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .poet-bio p,
+        [data-theme="dark"] .poet-bio #poetBio,
+        [data-theme="dark"] .poet-bio .lead {
+            color: #e0e0e0 !important;
+        }
+
+        /* На всякий случай еще раз для всех bg-light-subtle */
+        [data-theme="dark"] .bg-light-subtle h2,
+        [data-theme="dark"] .bg-light-subtle .section-title {
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .bg-light-subtle p,
+        [data-theme="dark"] .bg-light-subtle .lead {
+            color: #e0e0e0 !important;
+        }
+
+        /* Переиспользуем стили карточек стихов */
+        .poem-card {
+            background: var(--bg-primary);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .poem-card {
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .poem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .poem-card-header {
+            margin-bottom: 1rem;
+        }
+
+        .poem-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary) !important;
+            margin-bottom: 0.5rem;
+        }
+
+        .poem-card-year {
+            font-size: 0.875rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .poem-card-body {
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .poem-card-preview {
+            color: var(--text-primary) !important;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .poem-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .poem-tags {
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .poem-tags .badge {
+            font-size: 0.75rem;
+        }
+
+        /* Easter Egg стили */
+        #poetImage {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #poetImage:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        #poetImage:active {
+            transform: scale(0.95);
+        }
+
+        /* Пульсация для намека на пасхалку - УСИЛЕННАЯ */
+        @keyframes hintPulse {
+            0%, 100% { 
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2), 
+                            0 0 0 0 rgba(255,0,0,0),
+                            0 0 0 0 rgba(255,100,0,0); 
+                filter: brightness(1);
+            }
+            50% { 
+                box-shadow: 0 5px 35px rgba(255,0,0,0.7), 
+                            0 0 30px 8px rgba(255,0,0,0.5),
+                            0 0 50px 15px rgba(255,100,0,0.3); 
+                filter: brightness(1.1);
+            }
+        }
+
+        /* Применяется только для Пастернака */
+        .easter-egg-hint {
+            animation: hintPulse 1.5s ease-in-out infinite !important;
+            border: 3px solid rgba(255,0,0,0.5) !important;
+            box-shadow: 0 0 20px rgba(255,0,0,0.4) !important;
+            position: relative !important;
+        }
+
+        /* Дополнительный намек - огненное свечение вокруг */
+        .easter-egg-hint::before {
+            content: '🔥';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 2rem;
+            animation: floatFire 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255,100,0,0.8));
+        }
+
+        @keyframes floatFire {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(15deg); }
+        }
+
+        /* МЕТАЛЛИЧЕСКИЕ ЭФФЕКТЫ ДЛЯ ПАСХАЛКИ */
+        
+        /* Волна от центра */
+        @keyframes metalWave {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255,0,0,0.7),
+                            0 0 0 0 rgba(0,0,0,0.5);
+            }
+            50% {
+                box-shadow: 0 0 50px 20px rgba(255,0,0,0.3),
+                            0 0 100px 50px rgba(0,0,0,0.3);
+            }
+            100% {
+                box-shadow: 0 0 0 100px rgba(255,0,0,0),
+                            0 0 0 150px rgba(0,0,0,0);
+            }
+        }
+
+        /* Огненный фон */
+        @keyframes fireBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Пульсация красного света */
+        @keyframes redPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Дрожание текста */
+        @keyframes textShake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-2px, -2px) rotate(-1deg); }
+            20% { transform: translate(2px, 2px) rotate(1deg); }
+            30% { transform: translate(-2px, 2px) rotate(-1deg); }
+            40% { transform: translate(2px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, -2px) rotate(-1deg); }
+            60% { transform: translate(2px, 2px) rotate(1deg); }
+            70% { transform: translate(-2px, 2px) rotate(-1deg); }
+            80% { transform: translate(2px, -2px) rotate(1deg); }
+            90% { transform: translate(-2px, -2px) rotate(-1deg); }
+        }
+
+        /* Глитч эффект */
+        @keyframes glitch {
+            0% {
+                text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00;
+            }
+            25% {
+                text-shadow: -2px 2px 0 #ff0000, 2px -2px 0 #00ff00;
+            }
+            50% {
+                text-shadow: 2px -2px 0 #ff0000, -2px 2px 0 #00ff00;
+            }
+            75% {
+                text-shadow: -2px -2px 0 #ff0000, 2px 2px 0 #00ff00;
+            }
+            100% {
+                text-shadow: 2px 2px 0 #ff0000, -2px -2px 0 #00ff00;
+            }
+        }
+
+        /* Класс для активной пасхалки */
+        .metal-mode {
+            background: linear-gradient(45deg, #000000, #1a0000, #330000, #1a0000, #000000) !important;
+            background-size: 400% 400% !important;
+            animation: fireBackground 3s ease infinite !important;
+        }
+
+        .metal-mode .poet-hero {
+            position: relative;
+            animation: metalWave 2s ease-out;
+        }
+
+        .metal-mode .poet-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,0,0,0.2) 0%, transparent 70%);
+            animation: redPulse 2s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .metal-mode .poet-hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .metal-mode h1, .metal-mode h2, .metal-mode h3 {
+            animation: textShake 0.5s ease-in-out;
+            text-shadow: 2px 2px 4px rgba(255,0,0,0.5);
+        }
+
+        .metal-mode #poetName {
+            animation: glitch 0.3s ease-in-out 3;
+            color: #ff0000 !important;
+        }
+
+        /* Огненная рамка для изображения */
+        .metal-mode #poetImage {
+            border: 3px solid #ff0000 !important;
+            box-shadow: 0 0 30px rgba(255,0,0,0.8),
+                        0 0 60px rgba(255,0,0,0.6),
+                        inset 0 0 20px rgba(255,0,0,0.2) !important;
+            animation: metalWave 2s ease-out, hintPulse 1s ease-in-out infinite !important;
+        }
+
+        /* Агрессивные секции */
+        .metal-mode section {
+            border-top: 2px solid rgba(255,0,0,0.3);
+            border-bottom: 2px solid rgba(255,0,0,0.3);
+        }
+
+        .metal-mode .bg-light-subtle {
+            background: rgba(50,0,0,0.2) !important;
+        }
+
+        /* Металлические карточки стихов */
+        .metal-mode .poem-card {
+            background: linear-gradient(135deg, #1a0000 0%, #000000 100%) !important;
+            border: 2px solid #ff0000 !important;
+            box-shadow: 0 5px 20px rgba(255,0,0,0.4) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .metal-mode .poem-card:hover {
+            transform: translateY(-10px) scale(1.05) !important;
+            box-shadow: 0 10px 40px rgba(255,0,0,0.7) !important;
+            border-color: #ff3333 !important;
+        }
+
+        .metal-mode .poem-card-title {
+            color: #ff6666 !important;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+
+        .metal-mode .badge {
+            background: linear-gradient(135deg, #ff0000, #cc0000) !important;
+            box-shadow: 0 2px 5px rgba(255,0,0,0.5) !important;
+        }
+
+        .metal-mode .btn-danger {
+            background: linear-gradient(135deg, #ff0000, #990000) !important;
+            border: none !important;
+            box-shadow: 0 4px 10px rgba(255,0,0,0.5) !important;
+        }
+
+        .metal-mode .btn-danger:hover {
+            background: linear-gradient(135deg, #ff3333, #bb0000) !important;
+            box-shadow: 0 6px 15px rgba(255,0,0,0.7) !important;
+            transform: scale(1.1) !important;
+        }
+
+        /* Волны по краям страницы */
+        .metal-mode::before,
+        .metal-mode::after {
+            content: '';
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .metal-mode::before {
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #ff0000 15%,
+                #ffff00 25%, 
+                #ff0000 35%,
+                #ff0000 50%, 
+                #ff0000 65%,
+                #ffff00 75%,
+                #ff0000 85%, 
+                transparent 100%);
+            box-shadow: 0 0 30px rgba(255,0,0,0.9),
+                        0 0 15px rgba(255,255,0,0.5);
+            animation: redPulse 1s ease-in-out infinite, waveMove 2s linear infinite;
+        }
+
+        .metal-mode::after {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #ff0000 15%,
+                #ffff00 25%, 
+                #ff0000 35%,
+                #ff0000 50%, 
+                #ff0000 65%,
+                #ffff00 75%,
+                #ff0000 85%, 
+                transparent 100%);
+            box-shadow: 0 0 30px rgba(255,0,0,0.9),
+                        0 0 15px rgba(255,255,0,0.5);
+            animation: redPulse 1s ease-in-out infinite, waveMove 2s linear infinite reverse;
+        }
+
+        @keyframes waveMove {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Боковые огненные линии */
+        body.metal-mode {
+            position: relative;
+        }
+
+        body.metal-mode::before {
+            content: '';
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                #ff0000 15%,
+                #ffff00 25%, 
+                #ff0000 35%,
+                #ff0000 50%, 
+                #ff0000 65%,
+                #ffff00 75%,
+                #ff0000 85%, 
+                transparent 100%);
+            box-shadow: 0 0 20px rgba(255,0,0,0.8);
+            animation: redPulse 1.2s ease-in-out infinite;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        body.metal-mode::after {
+            content: '';
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, 
+                transparent 0%, 
+                #ff0000 15%,
+                #ffff00 25%, 
+                #ff0000 35%,
+                #ff0000 50%, 
+                #ff0000 65%,
+                #ffff00 75%,
+                #ff0000 85%, 
+                transparent 100%);
+            box-shadow: 0 0 20px rgba(255,0,0,0.8);
+            animation: redPulse 1.2s ease-in-out infinite;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* Искры (эффект частиц) */
+        @keyframes sparkle {
+            0%, 100% { 
+                opacity: 0; 
+                transform: scale(0) translateY(0); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1) translateY(-20px); 
+            }
+        }
+
+        /* Мигающий эффект экрана */
+        @keyframes screenFlash {
+            0%, 90%, 100% { opacity: 0; }
+            92%, 98% { opacity: 0.05; }
+        }
+
+        .metal-mode main::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ff0000;
+            pointer-events: none;
+            z-index: 9998;
+            animation: screenFlash 3s ease-in-out infinite;
+        }
+    </style>
+</body>
+</html>

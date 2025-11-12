@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Каталог стихов — Сборник стихов</title>
+    <script src="../scripts/theme.js"></script>
+    <script src="../scripts/bootstrap.bundle.js"></script>
+    <script src="../scripts/jquery-3.7.1.min.js"></script>
+    <script src="../scripts/poems-manager.js"></script>
+    <script src="../scripts/load-components.js"></script>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="poems-catalog py-5">
+            <div class="container">
+                <!-- Заголовок и статистика -->
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h1 class="display-heading fw-bold mb-3">Каталог стихотворений</h1>
+                        <p class="lead-text" id="poemsCount">Загрузка...</p>
+                    </div>
+                </div>
+
+                <!-- Поиск и фильтры -->
+                <div class="row mb-4">
+                    <div class="col-12 col-lg-8 mx-auto">
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Поиск по названию, автору, тексту...">
+                            <button class="btn btn-main" type="button" id="searchBtn">
+                                <span>🔍</span> Искать
+                            </button>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <select id="moodFilter" class="form-select" style="width: auto;">
+                                <option value="">Все настроения</option>
+                            </select>
+                            <select id="sortBy" class="form-select" style="width: auto;">
+                                <option value="title">По названию</option>
+                                <option value="author">По автору</option>
+                                <option value="year">По году (старые)</option>
+                                <option value="yearDesc">По году (новые)</option>
+                            </select>
+                            <button class="btn btn-outline-secondary" id="resetBtn">Сбросить</button>
+                        </div>
+
+                        <!-- Теги -->
+                        <div id="tagsContainer" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Список стихов -->
+                <div class="row g-4" id="poemsGrid">
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        let currentPoems = [];
+        let selectedTags = [];
+
+        // Функция для отрисовки карточек стихов
+        function renderPoems(poems) {
+            const grid = document.getElementById('poemsGrid');
+            
+            if (poems.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Стихи не найдены 😔</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = poems.map(poem => {
+                const isFavorite = favoritesManager.isPoemFavorite(poem.id);
+                return `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="poem-card" data-poem-id="${poem.id}">
+                        <div class="poem-card-header">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="poem-card-title">${poem.title}</h3>
+                                    <p class="poem-card-author">${poem.author}</p>
+                                    ${poem.year ? `<span class="poem-card-year">${poem.year}</span>` : ''}
+                                </div>
+                                <button class="btn btn-sm btn-link favorite-toggle-btn ${isFavorite ? 'text-danger' : 'text-secondary'}" 
+                                        data-poem-id="${poem.id}" 
+                                        title="${isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}">
+                                    ${isFavorite ? '❤️' : '🤍'}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="poem-card-body">
+                            <p class="poem-card-preview">${poem.text.substring(0, 150)}...</p>
+                        </div>
+                        <div class="poem-card-footer">
+                            <div class="poem-tags">
+                                ${poem.tags.map(tag => `<span class="badge bg-secondary">${tag}</span>`).join(' ')}
+                            </div>
+                            <button class="btn btn-sm btn-main read-poem-btn" data-poem-id="${poem.id}">
+                                Читать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            // Добавляем обработчики для кнопок "Читать"
+            document.querySelectorAll('.read-poem-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const poemId = parseInt(e.target.dataset.poemId);
+                    showPoemModal(poemId);
+                });
+            });
+
+            // Добавляем обработчики для кнопок избранного
+            document.querySelectorAll('.favorite-toggle-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const poemId = parseInt(e.target.dataset.poemId);
+                    const isFavorite = favoritesManager.togglePoem(poemId);
+                    
+                    // Обновляем иконку и цвет
+                    e.target.textContent = isFavorite ? '❤️' : '🤍';
+                    e.target.className = `btn btn-sm btn-link favorite-toggle-btn ${isFavorite ? 'text-danger' : 'text-secondary'}`;
+                    e.target.title = isFavorite ? 'Удалить из избранного' : 'Добавить в избранное';
+                });
+            });
+        }
+
+        // Глобальная переменная для модального окна (создаем один раз)
+        let poemModalInstance = null;
+
+        // Функция для очистки всех backdrop'ов (на случай багов)
+        function cleanupBackdrops() {
+            // Удаляем все оставшиеся backdrop'ы
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                backdrop.remove();
+            });
+            // Разблокируем body
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+
+        // Функция для показа модального окна со стихом
+        function showPoemModal(poemId) {
+            const poem = poemsManager.getPoemById(poemId);
+            if (!poem) return;
+
+            // Создаем модальное окно, если его еще нет
+            let modal = document.getElementById('poemModal');
+            if (!modal) {
+                const modalHTML = `
+                    <div class="modal fade" id="poemModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="poemModalTitle"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-muted" id="poemModalAuthor"></p>
+                                    <div id="poemModalText" style="white-space: pre-line; line-height: 1.8;"></div>
+                                    <div id="poemModalTags" class="mt-3"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                modal = document.getElementById('poemModal');
+                
+                // Создаем экземпляр модального окна один раз
+                poemModalInstance = new bootstrap.Modal(modal);
+
+                // Слушаем событие скрытия модального окна для очистки
+                modal.addEventListener('hidden.bs.modal', cleanupBackdrops);
+            }
+
+            // Заполняем данными
+            document.getElementById('poemModalTitle').textContent = poem.title;
+            document.getElementById('poemModalAuthor').textContent = `${poem.author}, ${poem.year || 'год неизвестен'}`;
+            document.getElementById('poemModalText').textContent = poem.text;
+            document.getElementById('poemModalTags').innerHTML = poem.tags.map(tag => 
+                `<span class="badge bg-secondary me-1">${tag}</span>`
+            ).join('');
+
+            // Показываем (используем уже созданный экземпляр)
+            poemModalInstance.show();
+        }
+
+        // Функция для отрисовки тегов
+        function renderTags() {
+            const tags = poemsManager.getAllTags();
+            const container = document.getElementById('tagsContainer');
+            
+            container.innerHTML = tags.map(tag => {
+                const isActive = selectedTags.includes(tag);
+                return `
+                    <button class="btn btn-sm ${isActive ? 'btn-main' : 'btn-outline-secondary'} tag-btn" 
+                            data-tag="${tag}">
+                        ${tag}
+                    </button>
+                `;
+            }).join('');
+
+            // Обработчики для тегов
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tag = e.target.dataset.tag;
+                    if (selectedTags.includes(tag)) {
+                        selectedTags = selectedTags.filter(t => t !== tag);
+                    } else {
+                        selectedTags.push(tag);
+                    }
+                    applyFilters();
+                });
+            });
+        }
+
+        // Функция для отрисовки фильтра настроений
+        function renderMoodFilter() {
+            const moods = poemsManager.getAllMoods();
+            const select = document.getElementById('moodFilter');
+            
+            moods.forEach(mood => {
+                const option = document.createElement('option');
+                option.value = mood;
+                option.textContent = mood;
+                select.appendChild(option);
+            });
+        }
+
+        // Применение фильтров
+        function applyFilters() {
+            let poems = poemsManager.getAllPoems();
+
+            // Поиск
+            const searchQuery = document.getElementById('searchInput').value;
+            if (searchQuery) {
+                poems = poemsManager.searchPoems(searchQuery);
+            }
+
+            // Фильтр по тегам
+            if (selectedTags.length > 0) {
+                poems = poemsManager.filterByTags(selectedTags);
+            }
+
+            // Фильтр по настроению
+            const mood = document.getElementById('moodFilter').value;
+            if (mood) {
+                poems = poemsManager.filterByMood(mood);
+            }
+
+            // Сортировка
+            const sortBy = document.getElementById('sortBy').value;
+            poems = poemsManager.sortPoems(poems, sortBy);
+
+            currentPoems = poems;
+            renderPoems(poems);
+            renderTags(); // Перерисовываем теги с учетом активных
+        }
+
+        // Инициализация после загрузки данных
+        document.addEventListener('poemsDataLoaded', () => {
+            currentPoems = poemsManager.getAllPoems();
+            
+            // Обновляем счетчик
+            document.getElementById('poemsCount').textContent = 
+                `В коллекции ${currentPoems.length} стихотворений от ${poemsManager.getAllPoets().length} поэтов`;
+
+            // Рендерим все
+            renderPoems(currentPoems);
+            renderTags();
+            renderMoodFilter();
+
+            // Обработчики
+            document.getElementById('searchBtn').addEventListener('click', applyFilters);
+            document.getElementById('searchInput').addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+            document.getElementById('moodFilter').addEventListener('change', applyFilters);
+            document.getElementById('sortBy').addEventListener('change', applyFilters);
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('moodFilter').value = '';
+                document.getElementById('sortBy').value = 'title';
+                selectedTags = [];
+                applyFilters();
+            });
+        });
+    </script>
+
+    <style>
+        .poem-card {
+            background: var(--bg-primary);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .poem-card {
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .poem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .poem-card-header {
+            margin-bottom: 1rem;
+        }
+
+        .poem-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .poem-card-author {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 0.25rem;
+        }
+
+        .poem-card-year {
+            font-size: 0.875rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .poem-card-body {
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .poem-card-preview {
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .poem-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .poem-tags {
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .poem-tags .badge {
+            font-size: 0.75rem;
+        }
+    </style>
+</body>
+</html>

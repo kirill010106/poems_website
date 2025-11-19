@@ -2,7 +2,8 @@
 let componentsLoaded = {
     header: false,
     footer: false,
-    favorites: false
+    favorites: false,
+    auth: false
 };
 
 // Время начала загрузки (для минимального показа loader'а)
@@ -11,27 +12,39 @@ const MIN_LOADER_DURATION = 300; // минимум 300ms показа loader'а
 
 $(document).ready(function () {
 
-    // Загружаем favorites.js динамически ПЕРВЫМ
-    const favScript = document.createElement('script');
-    favScript.src = '/scripts/favorites.js';
-    favScript.onload = function() {
-        console.log('✅ favorites.js загружен');
-        componentsLoaded.favorites = true;
-        // После загрузки favorites.js загружаем хедер
-        loadHeader();
-    };
-    document.head.appendChild(favScript);
+    // favorites.js уже загружен через <script> тег в HTML
+    componentsLoaded.favorites = true;
+    console.log('✅ favorites.js уже загружен');
+    // Загружаем auth.js
+    loadAuthScript();
 
     // Загружаем футер
     $('#footer-placeholder').load('/includes/footer.html', function () {
         console.log('Футер загружен');
+        
+        // Инициализируем кнопку "Наверх"
+        initBackToTop();
+        
         componentsLoaded.footer = true;
         checkAllComponentsLoaded();
     });
 
 });
 
-// Функция загрузки хедера (выделена отдельно для контроля порядка)
+// Функция загрузки auth.js
+function loadAuthScript() {
+    const authScript = document.createElement('script');
+    authScript.src = '/scripts/auth.js';
+    authScript.onload = function() {
+        console.log('✅ auth.js загружен');
+        componentsLoaded.auth = true;
+        // После загрузки auth.js загружаем хедер
+        loadHeader();
+    };
+    document.head.appendChild(authScript);
+}
+
+// Функция загрузки хедера
 function loadHeader() {
     $('#header-placeholder').load('/includes/header.html', function () {
         console.log('Хедер загружен');
@@ -44,23 +57,23 @@ function loadHeader() {
         // Устанавливаем активный пункт меню
         setActiveNavLink();
 
-        // Обновляем счетчик избранного (теперь функция точно определена)
+        // Обновляем счетчик избранного
         if (typeof updateFavoritesCounter === 'function') {
             updateFavoritesCounter();
         }
 
         componentsLoaded.header = true;
         checkAllComponentsLoaded();
-
-        // Инициализируем модальные окна Bootstrap (если нужно)
-        // $('[data-bs-toggle="modal"]').modal(); — не нужно, Bootstrap сам инициализирует
     });
 }
 
 // Проверка загрузки всех компонентов и скрытие loader'а
 function checkAllComponentsLoaded() {
-    if (componentsLoaded.header && componentsLoaded.footer && componentsLoaded.favorites) {
+    if (componentsLoaded.header && componentsLoaded.footer && componentsLoaded.favorites && componentsLoaded.auth) {
         console.log('✅ Все компоненты загружены');
+        
+        // Генерируем событие для других скриптов
+        document.dispatchEvent(new CustomEvent('componentsLoaded'));
         
         // Рассчитываем, сколько времени прошло с начала загрузки
         const loadDuration = Date.now() - loadStartTime;
@@ -98,6 +111,8 @@ function setActiveNavLink() {
         page = 'poems';
     } else if (path.includes('poets.html') || path.includes('poet-detail.html')) {
         page = 'poets';
+    } else if (path.includes('analysis.html')) {
+        page = 'analysis';
     } else if (path.includes('surprise.html')) {
         page = 'surprise';
     } else if (path.includes('favorites.html')) {
@@ -110,4 +125,19 @@ function setActiveNavLink() {
 
     // Добавляем active нужной ссылке
     $(`.nav-link[data-page="${page}"]`).addClass('active');
+}
+
+// Функция инициализации кнопки "Наверх"
+function initBackToTop() {
+    const backToTopBtn = document.getElementById('back-to-top');
+    
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 }

@@ -1,6 +1,6 @@
 // ==================== ТЕМА (LIGHT/DARK) ====================
 
-// Шаг 1: Устанавливаем тему ДО загрузки DOM (избегаем мигания)
+// Шаг 1: Устанавливаем тему
 (function() {
     const savedTheme = localStorage.getItem('theme');
     const htmlElement = document.documentElement;

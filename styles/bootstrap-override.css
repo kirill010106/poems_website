@@ -1,0 +1,295 @@
+/**
+ * Bootstrap Override - переопределение стилей Bootstrap без !important
+ * Этот файл загружается ПОСЛЕ bootstrap.css, но ПЕРЕД styles.css
+ * Использует CSS-переменные Bootstrap для естественного переопределения
+ */
+
+/* ============ ПЕРЕМЕННЫЕ BOOTSTRAP ============ */
+:root {
+    /* Кнопки */
+    --bs-btn-font-weight: 500;
+    --bs-btn-border-radius: 8px;
+}
+
+/* ============ НАВИГАЦИЯ ============ */
+.navbar-nav .nav-link {
+    color: var(--navbar-text);
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+    color: var(--navbar-text-hover);
+    background-color: var(--link-hover-bg);
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--navbar-text-hover);
+    background-color: var(--link-hover-bg);
+    font-weight: 600;
+}
+
+/* ============ КНОПКИ ============ */
+/* Основная кнопка */
+.btn-primary {
+    --bs-btn-bg: var(--accent);
+    --bs-btn-border-color: var(--accent);
+    --bs-btn-hover-bg: var(--accent-hover);
+    --bs-btn-hover-border-color: var(--accent-hover);
+    --bs-btn-active-bg: var(--accent-hover);
+    --bs-btn-active-border-color: var(--accent-hover);
+    --bs-btn-color: #1a1a1a;
+    --bs-btn-hover-color: #1a1a1a;
+}
+
+/* Вторичная кнопка */
+.btn-secondary {
+    --bs-btn-color: var(--text-primary);
+    --bs-btn-bg: var(--bg-primary);
+    --bs-btn-border-color: var(--link-hover-bg);
+}
+
+/* Outline кнопки */
+.btn-outline-primary {
+    --bs-btn-color: var(--navbar-text);
+    --bs-btn-border-color: var(--navbar-text);
+    --bs-btn-hover-bg: var(--navbar-text);
+    --bs-btn-hover-color: white;
+    --bs-btn-active-bg: var(--navbar-text);
+    --bs-btn-active-color: white;
+}
+
+/* ============ МОДАЛЬНЫЕ ОКНА ============ */
+.modal-content {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid rgba(126, 152, 22, 0.1);
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: var(--bg-primary);
+    border: 1px solid rgba(176, 200, 48, 0.15);
+}
+
+.modal-header {
+    border-bottom-color: var(--link-hover-bg);
+}
+
+.modal-footer {
+    border-top-color: var(--link-hover-bg);
+}
+
+.modal-title {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    color: var(--text-primary);
+}
+
+.btn-close {
+    filter: var(--bs-btn-close-filter, none);
+}
+
+[data-theme="dark"] .btn-close {
+    filter: invert(1);
+}
+
+/* ============ ФОРМЫ ============ */
+.form-control {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border-color: var(--link-hover-bg);
+}
+
+.form-control:focus {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(126, 152, 22, 0.15);
+}
+
+[data-theme="dark"] .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(176, 200, 48, 0.15);
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.form-select {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border-color: var(--link-hover-bg);
+}
+
+.form-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(126, 152, 22, 0.15);
+}
+
+/* ============ КАРТОЧКИ ============ */
+.card {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--link-hover-bg);
+}
+
+.card-header {
+    background-color: var(--bg-primary);
+    border-bottom-color: var(--link-hover-bg);
+}
+
+.card-footer {
+    background-color: var(--bg-primary);
+    border-top-color: var(--link-hover-bg);
+}
+
+/* ============ ALERT ============ */
+.alert {
+    color: var(--text-primary);
+}
+
+.alert-info {
+    --bs-alert-color: var(--text-primary);
+    --bs-alert-bg: rgba(126, 152, 22, 0.1);
+    --bs-alert-border-color: rgba(126, 152, 22, 0.2);
+}
+
+[data-theme="dark"] .alert-info {
+    --bs-alert-bg: rgba(176, 200, 48, 0.12);
+    --bs-alert-border-color: rgba(176, 200, 48, 0.2);
+}
+
+.alert-success {
+    --bs-alert-color: var(--text-primary);
+    --bs-alert-bg: rgba(126, 152, 22, 0.15);
+    --bs-alert-border-color: rgba(126, 152, 22, 0.25);
+}
+
+[data-theme="dark"] .alert-success {
+    --bs-alert-bg: rgba(176, 200, 48, 0.15);
+    --bs-alert-border-color: rgba(176, 200, 48, 0.25);
+}
+
+/* ============ BADGE ============ */
+.badge {
+    font-weight: 500;
+}
+
+.bg-primary {
+    background-color: var(--accent);
+    color: #1a1a1a;
+}
+
+.bg-secondary {
+    background-color: rgba(126, 152, 22, 0.15);
+    color: var(--navbar-text);
+}
+
+[data-theme="dark"] .bg-secondary {
+    background-color: rgba(176, 200, 48, 0.15);
+    color: var(--navbar-text);
+}
+
+/* ============ НАВБАР ============ */
+.navbar {
+    background-color: var(--bg-primary);
+}
+
+.navbar-toggler {
+    border-color: var(--link-hover-bg);
+    color: var(--navbar-text);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem var(--link-hover-bg);
+}
+
+.navbar-brand {
+    color: var(--text-primary);
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+    color: var(--navbar-text-hover);
+}
+
+/* ============ DROPDOWN ============ */
+.dropdown-menu {
+    background-color: var(--bg-primary);
+    border-color: var(--link-hover-bg);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--link-hover-bg);
+    color: var(--navbar-text-hover);
+}
+
+/* ============ ТАБЛИЦЫ ============ */
+.table {
+    --bs-table-color: var(--text-primary);
+    --bs-table-bg: var(--bg-primary);
+    --bs-table-border-color: var(--link-hover-bg);
+}
+
+/* ============ ПРОГРЕСС-БАРЫ ============ */
+.progress {
+    background-color: rgba(126, 152, 22, 0.1);
+}
+
+[data-theme="dark"] .progress {
+    background-color: rgba(176, 200, 48, 0.12);
+}
+
+.progress-bar {
+    background-color: var(--accent);
+}
+
+/* ============ PAGINATION ============ */
+.pagination .page-link {
+    color: var(--navbar-text);
+    background-color: var(--bg-primary);
+    border-color: var(--link-hover-bg);
+}
+
+.pagination .page-link:hover {
+    color: var(--navbar-text-hover);
+    background-color: var(--link-hover-bg);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #1a1a1a;
+}
+
+/* ============ BREADCRUMB ============ */
+.breadcrumb {
+    background-color: transparent;
+}
+
+.breadcrumb-item a {
+    color: var(--navbar-text);
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+/* ============ SPINNER ============ */
+.spinner-border {
+    color: var(--accent);
+}
+
+/* ============ TOOLTIPS ============ */
+.tooltip-inner {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}

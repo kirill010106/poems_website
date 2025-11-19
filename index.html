@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/bootstrap.css">
+    <link rel="stylesheet" href="styles/bootstrap-override.css">
     <link rel="stylesheet" href="styles/styles.css">
     <title>Сборник стихов</title>
     <script src="scripts/theme.js"></script>
     <script src="scripts/bootstrap.bundle.js"></script>
     <script src="scripts/jquery-3.7.1.min.js"></script>
     <script src="scripts/poems-manager.js"></script>
+    <script src="scripts/favorites.js"></script>
     <script src="scripts/notifications.js"></script>
+    <script src="scripts/poem-of-the-day.js"></script>
     <script src="./scripts/load-components.js"></script>
 </head>
 
@@ -66,6 +69,26 @@
         </div>
     </div>
 
+    <!-- Секция "Стих дня" -->
+    <section class="poem-of-day-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="poem-of-day-card">
+                        <div id="poem-of-the-day-container">
+                            <!-- Контент будет загружен через JavaScript -->
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="discover-section py-5 py-sm-5">
     <div class="container">
         <div class="row justify-content-center mb-5">
@@ -80,42 +103,42 @@
 
         <div class="row g-5 mt-4 mt-sm-5 mt-lg-6">
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="feature-card d-block text-decoration-none">
+                <div class="feature-card">
                     <div class="feature-thumb d-flex align-items-center justify-content-center">
                         <span class="feature-icon" aria-hidden="true">📚</span>
                     </div>
                     <div class="feature-info">
                         <h4 class="feature-title fw-semibold mb-2">База стихотворений</h4>
                         <p class="feature-text mb-0">Получите доступ к обширной коллекции стихотворений от различных поэтов</p>
-                        <span class="btn btn-sm btn-main mt-3">Подробнее</span>
+                        <a href="pages/poems.html" class="btn btn-sm btn-main mt-3">Подробнее</a>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="feature-card d-block text-decoration-none">
+                <div class="feature-card">
                     <div class="feature-thumb d-flex align-items-center justify-content-center">
                         <span class="feature-icon" aria-hidden="true">👤</span>
                     </div>
                     <div class="feature-info">
                         <h4 class="feature-title fw-semibold mb-2">Личности поэтов</h4>
                         <p class="feature-text mb-0">Изучите подробные профили известных поэтов и их произведений</p>
-                        <span class="btn btn-sm btn-main mt-3">Подробнее</span>
+                        <a href="pages/poets.html" class="btn btn-sm btn-main mt-3">Подробнее</a>
                     </div>
-                </a>
+                </div>
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="feature-card d-block text-decoration-none">
+                <div class="feature-card">
                     <div class="feature-thumb d-flex align-items-center justify-content-center">
                         <span class="feature-icon" aria-hidden="true">🔍</span>
                     </div>
                     <div class="feature-info">
                         <h4 class="feature-title fw-semibold mb-2">Анализ поэзии</h4>
                         <p class="feature-text mb-0">Узнайте о более глубоких значениях и темах популярных стихотворений</p>
-                        <span class="btn btn-sm btn-main mt-3">Подробнее</span>
+                        <a href="pages/analysis.html" class="btn btn-sm btn-main mt-3">Подробнее</a>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>
@@ -177,6 +200,54 @@
             inspireBtn.addEventListener('click', showRandomPoem);
             nextPoemBtn.addEventListener('click', showRandomPoem);
         });
+
+        // Функция для отображения полного стиха в модальном окне
+        function showPoemModal(poemId) {
+            const poem = poemsManager.getPoemById(poemId);
+            if (!poem) {
+                alert('Стих не найден');
+                return;
+            }
+
+            // Создаем модальное окно, если его еще нет
+            let fullPoemModal = document.getElementById('fullPoemModal');
+            if (!fullPoemModal) {
+                const modalHTML = `
+                    <div class="modal fade" id="fullPoemModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="fullPoemModalTitle"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-muted" id="fullPoemModalAuthor"></p>
+                                    <div id="fullPoemModalText" style="white-space: pre-line; line-height: 1.8;"></div>
+                                    <div id="fullPoemModalTags" class="mt-3"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                fullPoemModal = document.getElementById('fullPoemModal');
+            }
+
+            // Обновляем содержимое
+            document.getElementById('fullPoemModalTitle').textContent = poem.title;
+            document.getElementById('fullPoemModalAuthor').textContent = `${poem.author}, ${poem.year || 'год неизвестен'}`;
+            document.getElementById('fullPoemModalText').textContent = poem.text;
+            
+            const tagsHtml = poem.tags ? poem.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('') : '';
+            document.getElementById('fullPoemModalTags').innerHTML = tagsHtml;
+
+            // Показываем модальное окно
+            const modalInstance = new bootstrap.Modal(fullPoemModal);
+            modalInstance.show();
+        }
     </script>
     
 </body>

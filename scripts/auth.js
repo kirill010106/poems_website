@@ -1,27 +1,84 @@
-// Простая фронтенд-авторизация (без бэкенда)
+/**
+ * Система авторизации и регистрации пользователей
+ * Использует LocalStorage для хранения данных (клиентское приложение)
+ */
 class AuthManager {
     constructor() {
         this.storageKey = 'poetryUsers';
         this.currentUserKey = 'poetryCurrentUser';
-        this.init();
+        this.initialized = false;
     }
 
+    /**
+     * Инициализация системы авторизации
+     */
     init() {
-        // Инициализируем хранилище, если его нет
+        if (this.initialized) return;
+        
+        // Инициализируем хранилище пользователей
         if (!localStorage.getItem(this.storageKey)) {
             localStorage.setItem(this.storageKey, JSON.stringify([]));
         }
         
-        // Проверяем, авторизован ли пользователь
+        // Обновляем UI
         this.updateUI();
+        
+        // Подключаем обработчики событий
+        this.attachEventHandlers();
+        
+        this.initialized = true;
+        console.log('AuthManager инициализирован');
     }
 
+    /**
+     * Простое хеширование пароля (для демонстрации)
+     * В реальном приложении использовать bcrypt на сервере!
+     */
+    hashPassword(password) {
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+            const char = password.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash;
+        }
+        return hash.toString(36);
+    }
+
+    /**
+     * Валидация email
+     */
+    validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    /**
+     * Регистрация нового пользователя
+     */
     register(username, email, password) {
+        // Валидация
+        if (!username || username.length < 3) {
+            return { success: false, message: 'Имя пользователя должно содержать минимум 3 символа' };
+        }
+        
+        if (!this.validateEmail(email)) {
+            return { success: false, message: 'Некорректный email адрес' };
+        }
+        
+        if (!password || password.length < 6) {
+            return { success: false, message: 'Пароль должен содержать минимум 6 символов' };
+        }
+
         const users = JSON.parse(localStorage.getItem(this.storageKey));
         
-        // Проверяем, существует ли уже такой email
+        // Проверяем уникальность email
         if (users.find(u => u.email === email)) {
             return { success: false, message: 'Пользователь с таким email уже существует' };
+        }
+
+        // Проверяем уникальность username
+        if (users.find(u => u.username === username)) {
+            return { success: false, message: 'Пользователь с таким именем уже существует' };
         }
 
         // Создаём нового пользователя
@@ -29,166 +86,363 @@ class AuthManager {
             id: Date.now(),
             username,
             email,
-            password, // В реальном приложении пароль нужно хешировать!
-            createdAt: new Date().toISOString()
+            password: this.hashPassword(password),
+            createdAt: new Date().toISOString(),
+            lastLogin: null
         };
 
         users.push(newUser);
         localStorage.setItem(this.storageKey, JSON.stringify(users));
 
-        return { success: true, message: 'Регистрация успешна! Теперь вы можете войти.' };
+        // Автоматический вход после регистрации
+        this.performLogin(newUser);
+
+        return { success: true, message: `Добро пожаловать, ${username}!` };
     }
 
+    /**
+     * Вход пользователя
+     */
     login(email, password) {
+        if (!this.validateEmail(email)) {
+            return { success: false, message: 'Некорректный email адрес' };
+        }
+
         const users = JSON.parse(localStorage.getItem(this.storageKey));
-        const user = users.find(u => u.email === email && u.password === password);
+        const hashedPassword = this.hashPassword(password);
+        const user = users.find(u => u.email === email && u.password === hashedPassword);
 
         if (!user) {
             return { success: false, message: 'Неверный email или пароль' };
         }
 
+        // Обновляем время последнего входа
+        user.lastLogin = new Date().toISOString();
+        const userIndex = users.findIndex(u => u.id === user.id);
+        users[userIndex] = user;
+        localStorage.setItem(this.storageKey, JSON.stringify(users));
+
+        // Выполняем вход
+        this.performLogin(user);
+
+        return { success: true, message: `С возвращением, ${user.username}!` };
+    }
+
+    /**
+     * Выполнение входа (общая логика)
+     */
+    performLogin(user) {
         // Сохраняем текущего пользователя (без пароля)
         const currentUser = {
             id: user.id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            createdAt: user.createdAt,
+            lastLogin: user.lastLogin || new Date().toISOString()
         };
         
         localStorage.setItem(this.currentUserKey, JSON.stringify(currentUser));
+        
+        // Генерируем событие для других компонентов
+        document.dispatchEvent(new CustomEvent('userLoggedIn', { detail: currentUser }));
+        
+        // Обновляем UI
         this.updateUI();
-
-        return { success: true, message: 'Вход выполнен успешно!' };
     }
 
+    /**
+     * Выход пользователя
+     */
     logout() {
+        const user = this.getCurrentUser();
         localStorage.removeItem(this.currentUserKey);
+        
+        // Генерируем событие
+        document.dispatchEvent(new CustomEvent('userLoggedOut', { detail: user }));
+        
+        // Обновляем UI
         this.updateUI();
-        window.location.reload();
+        
+        // Показываем уведомление
+        if (typeof showNotification === 'function') {
+            showNotification('Вы вышли из системы', 'info');
+        }
+        
+        // Перезагружаем страницу для сброса состояния
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
     }
 
+    /**
+     * Получить текущего пользователя
+     */
     getCurrentUser() {
         const userStr = localStorage.getItem(this.currentUserKey);
         return userStr ? JSON.parse(userStr) : null;
     }
 
+    /**
+     * Проверка авторизации
+     */
     isLoggedIn() {
         return this.getCurrentUser() !== null;
     }
 
+    /**
+     * Получить всех пользователей (для отладки)
+     */
+    getAllUsers() {
+        return JSON.parse(localStorage.getItem(this.storageKey));
+    }
+
+    /**
+     * Обновление UI в зависимости от статуса авторизации
+     */
     updateUI() {
         const user = this.getCurrentUser();
-        const loginBtn = document.querySelector('[data-bs-target="#loginModal"]');
-        const registerBtn = document.querySelector('[data-bs-target="#registerModal"]');
+        const loginBtn = document.querySelector('.login-btn');
+        const registerBtn = document.querySelector('.register-btn');
+        
+        if (!loginBtn || !registerBtn) {
+            // Header ещё не загружен, попробуем позже
+            setTimeout(() => this.updateUI(), 100);
+            return;
+        }
         
         if (user) {
-            // Пользователь авторизован - показываем имя и кнопку выхода
-            if (loginBtn) {
-                loginBtn.textContent = user.username;
-                loginBtn.removeAttribute('data-bs-toggle');
-                loginBtn.removeAttribute('data-bs-target');
-                loginBtn.style.cursor = 'default';
-            }
-            
-            if (registerBtn) {
-                registerBtn.textContent = 'Выйти';
-                registerBtn.removeAttribute('data-bs-target');
-                registerBtn.setAttribute('data-bs-toggle', 'modal');
-                registerBtn.onclick = (e) => {
-                    e.preventDefault();
-                    if (confirm('Вы уверены, что хотите выйти?')) {
-                        this.logout();
-                    }
-                };
-            }
+            // Пользователь авторизован
+            this.showAuthenticatedUI(user, loginBtn, registerBtn);
+        } else {
+            // Пользователь не авторизован
+            this.showGuestUI(loginBtn, registerBtn);
         }
     }
-}
 
-// Создаём глобальный экземпляр
-const authManager = new AuthManager();
+    /**
+     * UI для авторизованного пользователя
+     */
+    showAuthenticatedUI(user, loginBtn, registerBtn) {
+        // Показываем имя пользователя вместо кнопки входа
+        loginBtn.textContent = `👤 ${user.username}`;
+        loginBtn.classList.remove('btn-outline-secondary');
+        loginBtn.classList.add('btn-outline-primary');
+        loginBtn.removeAttribute('data-bs-toggle');
+        loginBtn.removeAttribute('data-bs-target');
+        loginBtn.style.cursor = 'default';
+        loginBtn.title = `Вы вошли как ${user.username}`;
+        
+        // Меняем кнопку регистрации на кнопку выхода
+        registerBtn.textContent = 'Выйти';
+        registerBtn.classList.remove('btn-main');
+        registerBtn.classList.add('btn-outline-danger');
+        registerBtn.removeAttribute('data-bs-toggle');
+        registerBtn.removeAttribute('data-bs-target');
+        
+        // Обработчик выхода
+        registerBtn.onclick = (e) => {
+            e.preventDefault();
+            this.confirmLogout();
+        };
+    }
 
-document.addEventListener('DOMContentLoaded', function () {
-    
-    // Форма входа
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
+    /**
+     * UI для неавторизованного пользователя
+     */
+    showGuestUI(loginBtn, registerBtn) {
+        // Восстанавливаем кнопку входа
+        loginBtn.textContent = 'Вход';
+        loginBtn.classList.remove('btn-outline-primary');
+        loginBtn.classList.add('btn-outline-secondary');
+        loginBtn.setAttribute('data-bs-toggle', 'modal');
+        loginBtn.setAttribute('data-bs-target', '#loginModal');
+        loginBtn.style.cursor = 'pointer';
+        loginBtn.title = 'Войти в систему';
+        loginBtn.onclick = null;
+        
+        // Восстанавливаем кнопку регистрации
+        registerBtn.textContent = 'Регистрация';
+        registerBtn.classList.remove('btn-outline-danger');
+        registerBtn.classList.add('btn-main');
+        registerBtn.setAttribute('data-bs-toggle', 'modal');
+        registerBtn.setAttribute('data-bs-target', '#registerModal');
+        registerBtn.onclick = null;
+    }
+
+    /**
+     * Подтверждение выхода
+     */
+    confirmLogout() {
+        // Создаём красивое модальное окно подтверждения
+        const modalHtml = `
+            <div class="modal fade" id="logoutConfirmModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Подтверждение выхода</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Вы уверены, что хотите выйти из системы?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-danger" id="confirmLogoutBtn">Выйти</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Удаляем старое модальное окно, если есть
+        const oldModal = document.getElementById('logoutConfirmModal');
+        if (oldModal) oldModal.remove();
+        
+        // Добавляем новое
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        const modal = new bootstrap.Modal(document.getElementById('logoutConfirmModal'));
+        modal.show();
+        
+        // Обработчик подтверждения
+        document.getElementById('confirmLogoutBtn').addEventListener('click', () => {
+            modal.hide();
+            this.logout();
+        });
+        
+        // Удаляем модальное окно после закрытия
+        document.getElementById('logoutConfirmModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
+        });
+    }
+
+    /**
+     * Подключение обработчиков событий для форм
+     */
+    attachEventHandlers() {
+        // Ждём загрузки компонентов
+        document.addEventListener('componentsLoaded', () => {
+            this.setupLoginForm();
+            this.setupRegisterForm();
+        });
+        
+        // Если компоненты уже загружены
+        if (document.getElementById('loginForm')) {
+            this.setupLoginForm();
+            this.setupRegisterForm();
+        }
+    }
+
+    /**
+     * Настройка формы входа
+     */
+    setupLoginForm() {
+        const form = document.getElementById('loginForm');
+        if (!form) return;
+
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const errorDiv = document.getElementById('loginError');
             
-            const result = authManager.login(email, password);
+            // Скрываем предыдущие ошибки
+            errorDiv.classList.add('d-none');
+            
+            // Выполняем вход
+            const result = this.login(email, password);
             
             if (result.success) {
+                // Успешный вход
+                if (typeof showNotification === 'function') {
+                    showNotification(result.message, 'success');
+                }
+                
                 // Закрываем модальное окно
                 const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                modal.hide();
+                if (modal) modal.hide();
                 
-                // Перезагружаем страницу для обновления UI
-                window.location.reload();
+                // Очищаем форму
+                form.reset();
+                
             } else {
-                // Показываем ошибку
+                // Ошибка входа
                 errorDiv.textContent = result.message;
                 errorDiv.classList.remove('d-none');
+                
+                // Трясём форму
+                form.classList.add('shake');
+                setTimeout(() => form.classList.remove('shake'), 500);
             }
         });
     }
 
-    // Форма регистрации
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+    /**
+     * Настройка формы регистрации
+     */
+    setupRegisterForm() {
+        const form = document.getElementById('registerForm');
+        if (!form) return;
 
-            const username = document.getElementById('registerUsername').value;
-            const email = document.getElementById('registerEmail').value;
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value;
-            const confirm = document.getElementById('registerPasswordConfirm').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
             const errorDiv = document.getElementById('registerError');
             const successDiv = document.getElementById('registerSuccess');
-
+            
             // Скрываем предыдущие сообщения
             errorDiv.classList.add('d-none');
             successDiv.classList.add('d-none');
-
-            // Валидация
-            if (password !== confirm) {
-                errorDiv.textContent = 'Пароли не совпадают!';
+            
+            // Проверка совпадения паролей
+            if (password !== passwordConfirm) {
+                errorDiv.textContent = 'Пароли не совпадают';
                 errorDiv.classList.remove('d-none');
+                
+                form.classList.add('shake');
+                setTimeout(() => form.classList.remove('shake'), 500);
                 return;
             }
-
-            if (password.length < 6) {
-                errorDiv.textContent = 'Пароль должен содержать минимум 6 символов';
-                errorDiv.classList.remove('d-none');
-                return;
-            }
-
-            // Регистрация
-            const result = authManager.register(username, email, password);
+            
+            // Выполняем регистрацию
+            const result = this.register(username, email, password);
             
             if (result.success) {
-                successDiv.textContent = result.message;
-                successDiv.classList.remove('d-none');
+                // Успешная регистрация
+                if (typeof showNotification === 'function') {
+                    showNotification(result.message, 'success');
+                }
+                
+                // Закрываем модальное окно
+                const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                if (modal) modal.hide();
                 
                 // Очищаем форму
-                registerForm.reset();
+                form.reset();
                 
-                // Через 2 секунды переключаем на форму входа
-                setTimeout(() => {
-                    const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
-                    registerModal.hide();
-                    
-                    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-                    loginModal.show();
-                }, 2000);
             } else {
+                // Ошибка регистрации
                 errorDiv.textContent = result.message;
                 errorDiv.classList.remove('d-none');
+                
+                form.classList.add('shake');
+                setTimeout(() => form.classList.remove('shake'), 500);
             }
         });
     }
+}
 
-});
+// Создаём глобальный экземпляр менеджера авторизации
+const authManager = new AuthManager();
+
+// Инициализируем при загрузке DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => authManager.init());
+} else {
+    authManager.init();
+}

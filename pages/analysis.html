@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/bootstrap-override.css">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/analysis.css">
+    <title>Анализ поэзии - Сборник стихов</title>
+    <script src="../scripts/theme.js"></script>
+</head>
+
+<body class="analysis-page">
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div id="header-placeholder"></div>
+
+    <main class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3">🔍 Анализ поэзии</h1>
+            <p class="lead text-muted">Погрузитесь в глубокий анализ стихотворений через интерактивные инструменты</p>
+        </div>
+
+        <!-- Анализатор настроения -->
+        <section class="mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h3 fw-bold mb-3">🎭 Анализатор настроения</h2>
+                    <p class="text-muted mb-4">Выберите настроение, чтобы увидеть, как оно отражается в поэзии</p>
+                    
+                    <div class="row g-3 mb-4" id="mood-buttons">
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button class="btn btn-outline-primary w-100 mood-btn" data-mood="меланхоличное">
+                                😔 Меланхолия
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button class="btn btn-outline-success w-100 mood-btn" data-mood="радостное">
+                                😊 Радость
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button class="btn btn-outline-secondary w-100 mood-btn" data-mood="созерцательное">
+                                🤔 Философия
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button class="btn btn-outline-secondary w-100 mood-btn" data-mood="романтичное">
+                                ❤️ Романтика
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button class="btn btn-outline-secondary w-100 mood-btn" data-mood="ностальгичное">
+                                🏛️ Ностальгия
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <button class="btn btn-outline-secondary w-100 mood-btn" data-mood="таинственное">
+                                🌙 Мистика
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="mood-results" class="mt-4" style="display: none;">
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading mb-2" id="mood-title"></h5>
+                            <p class="mb-2" id="mood-description"></p>
+                            <hr>
+                            <p class="mb-0"><strong>Найдено стихотворений:</strong> <span id="mood-count"></span></p>
+                        </div>
+                        <div id="mood-poems" class="row g-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Облако тегов -->
+        <section class="mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h3 fw-bold mb-3">☁️ Облако популярных тем</h2>
+                    <p class="text-muted mb-4">Нажмите на тег, чтобы увидеть связанные стихотворения</p>
+                    
+                    <div id="tag-cloud" class="d-flex flex-wrap gap-2 mb-4" style="min-height: 150px;">
+                        <div class="text-muted">Загрузка тегов...</div>
+                    </div>
+
+                    <div id="tag-results" style="display: none;">
+                        <hr>
+                        <h5 class="mb-3">Стихи по теме: <span class="text-primary" id="selected-tag"></span></h5>
+                        <div id="tag-poems" class="row g-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Временная шкала -->
+        <section class="mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h3 fw-bold mb-3">📅 Поэзия сквозь время</h2>
+                    <p class="text-muted mb-4">Исследуйте, как менялась поэзия в разные эпохи</p>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="timeline-container">
+                                <div class="btn-group w-100" role="group" id="era-buttons">
+                                    <button type="button" class="btn btn-outline-secondary era-btn" data-era="1800-1850">
+                                        <span class="era-year">1800-1850</span><br><small class="era-name">Золотой век</small>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary era-btn" data-era="1850-1900">
+                                        <span class="era-year">1850-1900</span><br><small class="era-name">Реализм</small>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary era-btn" data-era="1900-1920">
+                                        <span class="era-year">1900-1920</span><br><small class="era-name">Серебряный век</small>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary era-btn" data-era="1920-1950">
+                                        <span class="era-year">1920-1950</span><br><small class="era-name">Советский период</small>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary era-btn" data-era="1950-2000">
+                                        <span class="era-year">1950-2000</span><br><small class="era-name">Современность</small>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="era-results" style="display: none;">
+                        <div class="alert alert-success">
+                            <h5 class="alert-heading mb-2" id="era-title"></h5>
+                            <p class="mb-0" id="era-description"></p>
+                        </div>
+                        <div id="era-poems" class="row g-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Статистика поэтов -->
+        <section class="mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h3 fw-bold mb-3">📊 Сравнение поэтов</h2>
+                    <p class="text-muted mb-4">Статистика и особенности творчества разных авторов</p>
+                    
+                    <div class="row g-3" id="poet-stats">
+                        <!-- Заполняется динамически -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Интересные факты -->
+        <section class="mb-5">
+            <div class="card shadow-sm bg-gradient">
+                <div class="card-body p-4">
+                    <h2 class="h3 fw-bold mb-3">💡 Знаете ли вы?</h2>
+                    <div id="facts-container" class="row g-3">
+                        <!-- Заполняется динамически -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../scripts/bootstrap.bundle.js"></script>
+    <script src="../scripts/jquery-3.7.1.min.js"></script>
+    <script src="../scripts/poems-manager.js"></script>
+    <script src="../scripts/notifications.js"></script>
+    <script src="../scripts/load-components.js"></script>
+    <script src="../scripts/analysis.js"></script>
+    
+    <script>
+        // Модальное окно для отображения стиха
+        let poemModalInstance = null;
+
+        function showPoemModal(poemId) {
+            const poem = poemsManager.getPoemById(poemId);
+            if (!poem) return;
+
+            // Создаем модальное окно, если его еще нет
+            let modal = document.getElementById('poemModal');
+            if (!modal) {
+                const modalHTML = `
+                    <div class="modal fade" id="poemModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="poemModalTitle"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-muted" id="poemModalAuthor"></p>
+                                    <div id="poemModalText" style="white-space: pre-line; line-height: 1.8;"></div>
+                                    <div id="poemModalTags" class="mt-3"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                modal = document.getElementById('poemModal');
+                poemModalInstance = new bootstrap.Modal(modal);
+            }
+
+            // Обновляем содержимое
+            document.getElementById('poemModalTitle').textContent = poem.title;
+            document.getElementById('poemModalAuthor').textContent = `${poem.author}, ${poem.year || 'год неизвестен'}`;
+            document.getElementById('poemModalText').textContent = poem.text;
+            
+            const tagsHtml = poem.tags ? poem.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('') : '';
+            document.getElementById('poemModalTags').innerHTML = tagsHtml;
+
+            // Показываем модальное окно
+            poemModalInstance.show();
+        }
+    </script>
+</body>
+</html>

@@ -141,7 +141,7 @@
     transition: background-color .3s ease, color .3s ease, border-color .3s ease;
 }
 html, body {
-    background-color: var(--bg-primary) !important;
+    background-color: var(--bg-primary);
     color: var(--text-primary);
     margin: 0;
     font-family: system-ui,-apple-system,'Segoe UI',Roboto,Arial,'Noto Sans','Helvetica Neue',sans-serif;
@@ -149,18 +149,18 @@ html, body {
 h2 { margin: 15px; color: var(--text-primary); }
 
 /* ============ НАВИГАЦИЯ ============ */
-header,
-.navbar,
-.custom-navbar {
-    background-color: var(--bg-primary) !important;
+body header,
+body .navbar,
+body .custom-navbar {
+    background-color: var(--bg-primary);
     color: var(--navbar-text);
 }
 header { position: sticky; top: 0; z-index: 1000; }
-header *,
-.navbar-brand,
-.nav-link,
-.nav-link.active {
-    color: var(--navbar-text) !important;
+body header *,
+body .navbar-brand,
+body .navbar-nav .nav-link,
+body .navbar-nav .nav-link.active {
+    color: var(--navbar-text);
 }
 .nav-link.active { font-weight: 600; }
 
@@ -178,24 +178,24 @@ header *,
 .navbar-brand img { height: 40px; width: auto; }
 
 .nav-btn { font-size: 1rem; padding: .375rem 1rem; }
-.nav-btn:hover {
-    color: var(--navbar-text-hover) !important;
+body .nav-btn:hover {
+    color: var(--navbar-text-hover);
     background-color: var(--link-hover-bg);
     border-radius: .375rem;
 }
-.no-border,
-.login-btn { border: none !important; background: transparent !important; }
-.no-border:hover {
-    background-color: var(--link-hover-bg) !important;
-    color: var(--navbar-text-hover) !important;
+body .no-border,
+body .login-btn { border: none; background: transparent; }
+body .no-border:hover {
+    background-color: var(--link-hover-bg);
+    color: var(--navbar-text-hover);
 }
 
 .navbar .nav-link {
     transition: color .3s ease, background-color .3s ease;
     position: relative;
 }
-.navbar .nav-link:hover {
-    color: var(--navbar-text-hover) !important;
+body .navbar .navbar-nav .nav-link:hover {
+    color: var(--navbar-text-hover);
     background-color: var(--link-hover-bg);
     border-radius: .375rem;
 }
@@ -207,24 +207,24 @@ header *,
     background-color: var(--navbar-text);
     transition: all .3s ease;
 }
-.navbar .nav-link.active:hover {
-    color: #5a700f !important;
+body .navbar .navbar-nav .nav-link.active:hover {
+    color: #5a700f;
     background-color: rgba(126,152,22,.15);
 }
 
 /* Счетчик избранного */
-#favoritesCounter {
+body .nav-link #favoritesCounter {
     font-size: 0.7rem;
     font-weight: 600;
     padding: 0.25em 0.5em;
-    background: var(--accent) !important;
-    color: var(--bg-primary) !important;
+    background: var(--accent);
+    color: var(--bg-primary);
     border: 2px solid var(--bg-primary);
 }
 
-[data-theme="dark"] #favoritesCounter {
-    background: var(--accent) !important;
-    color: #1a1a1a !important;
+[data-theme="dark"] body .nav-link #favoritesCounter {
+    background: var(--accent);
+    color: #1a1a1a;
     border-color: var(--bg-primary);
 }
 
@@ -246,11 +246,11 @@ header *,
 }
 
 /* ============ ФУТЕР ============ */
-footer,
-.nav-footer { background-color: var(--bg-primary); }
-.nav-footer a,
-.nav-footer .nav-link {
-    color: var(--footer-text) !important;
+body footer,
+body .nav-footer { background-color: var(--bg-primary); }
+body .nav-footer a,
+body .nav-footer .nav-link {
+    color: var(--footer-text);
     font-weight: 500;
 }
 .nav-footer { padding: 2rem 0; text-align: center; }
@@ -287,8 +287,8 @@ footer,
 }
 
 /* ============ СЕКЦИЯ DISCOVER ============ */
-.discover-section {
-    background-color: var(--section-bg) !important;
+body .discover-section {
+    background-color: var(--section-bg);
     padding: 4rem 0;
 }
 .text-indigo-light,
@@ -361,26 +361,26 @@ footer,
 }
 
 /* ============ КНОПКИ / ССЫЛКИ ============ */
-.learn-more-btn {
-    color: var(--text-primary) !important;
+body a.learn-more-btn {
+    color: var(--text-primary);
     text-decoration: none;
     font-weight: 600;
 }
-.learn-more-btn:hover {
-    color: var(--navbar-text-hover) !important;
+body a.learn-more-btn:hover {
+    color: var(--navbar-text-hover);
     text-decoration: underline;
 }
-.register-btn {
-    color: var(--text-secondary) !important;
+body a.register-btn {
+    color: var(--text-secondary);
     text-decoration: none;
     font-weight: 600;
 }
-.btn.btn-main {
-    background-color: var(--accent) !important;
+body .btn.btn-main.btn-main {
+    background-color: var(--accent);
     border: none;
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
 }
-.btn.btn-main:hover { background-color: var(--accent-hover) !important; }
+body .btn.btn-main.btn-main:hover { background-color: var(--accent-hover); }
 
 /* ============ ПОЭТЫ ============ */
 .poets-title {
@@ -431,29 +431,34 @@ footer,
 .poet-card:hover .poet-info { transform: translateY(0); }
 .poet-name { color: #ffffff; font-weight: 600; }
 .poet-meta { color: rgba(255, 255, 255, 0.85); }
-.poet-years, .poet-count { color: rgba(255, 255, 255, 0.75) !important; }
+body .poet-card .poet-years, 
+body .poet-card .poet-count { color: rgba(255, 255, 255, 0.75) !important; }
 
 /* ============ МОДАЛЫ ============ */
 /* Стандартные стили модалов (для других форм, кроме glassmorphism) */
-.modal-content {
-    background-color: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
+body .modal-content {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     border: none;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,.15);
 }
-.modal-header { border-bottom: 1px solid var(--link-hover-bg); padding-bottom: 0; }
-.modal-title { color: var(--text-primary) !important; }
-.modal-body { padding-top: 1.5rem; color: var(--text-primary) !important; }
-.form-label { font-weight: 600; color: var(--text-primary) !important; }
-.form-control,
-.form-text {
-    color: var(--text-primary) !important;
+body .modal-header { border-bottom: 1px solid var(--link-hover-bg); padding-bottom: 0; }
+body .modal-title { color: var(--text-primary); }
+body .modal-body { padding-top: 1.5rem; color: var(--text-primary); }
+body .form-label { font-weight: 600; color: var(--text-primary); }
+body .form-control,
+body .form-text {
+    color: var(--text-primary);
     background-color: var(--bg-primary) !important;
-    border-color: var(--link-hover-bg) !important;
+    border-color: var(--link-hover-bg);
 }
-.form-control:focus {
-    border-color: var(--accent) !important;
+
+body .form-control::placeholder {
+    color: var(--text-secondary);
+}
+body .form-control:focus {
+    border-color: var(--accent);
     box-shadow: 0 0 0 .2rem rgba(184,230,0,.25);
 }
 
@@ -532,10 +537,10 @@ footer,
 
 /* ============ УВЕДОМЛЕНИЯ ============ */
 .notif { position: relative; padding: 2px; }
-.notif-bell {
-    background: var(--bg-primary) !important;
-    color: var(--navbar-text) !important;
-    border: none !important;
+body .notif-bell {
+    background: var(--bg-primary);
+    color: var(--navbar-text);
+    border: none;
     border-radius: 50%;
     width: 42px; height: 42px;
     display: inline-flex;
@@ -544,7 +549,7 @@ footer,
     box-shadow: 0 6px 20px rgba(0,0,0,.12);
     cursor: pointer;
 }
-.notif-bell:hover { background: var(--link-hover-bg) !important; }
+body .notif-bell:hover { background: var(--link-hover-bg); }
 .notif-badge {
     position: absolute;
     top: -4px; right: -4px;
@@ -678,74 +683,227 @@ footer,
     .notif { order: 2; }
 }
 
-/* ============ СОЦСЕТИ В ФУТЕРЕ ============ */
-.social-footer {
-    background-color: var(--bg-primary);
-    padding: 3rem 0 2rem;
-    text-align: center;
+/* ============ ФУТЕР (MODERN DESIGN) ============ */
+body .site-footer {
+    background: linear-gradient(to bottom, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    padding: 4rem 0 0;
+    color: var(--text-secondary);
+    border-top: 1px solid rgba(126, 152, 22, 0.2);
 }
 
-.social-buttons {
-    display: flex;
-    gap: 1.25rem;
-    justify-content: center;
+[data-theme="dark"] body .site-footer {
+    border-top-color: rgba(176, 200, 48, 0.2);
 }
 
-.social-btn {
+/* Заголовки секций */
+body .footer-heading {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
     position: relative;
+    padding-bottom: 0.5rem;
+}
+
+body .footer-heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    border-radius: 2px;
+}
+
+/* Текст описания */
+body .footer-text {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+/* Социальные ссылки */
+body .social-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+body .social-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: var(--link-hover-bg);
     color: var(--footer-text);
-    text-decoration: none;
-    cursor: pointer;
-    z-index: 1;
+    transition: all 0.3s ease;
+    position: relative;
     overflow: hidden;
-    transition: transform 0.25s ease;
 }
 
-.social-btn:hover {
-    transform: translateY(-3px);
-}
-
-.social-btn::before {
+body .social-link::before {
     content: '';
     position: absolute;
-    top: -100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-    transition: top 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
     border-radius: 50%;
 }
 
-.social-btn:hover::before {
-    top: 0;
+body .social-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(126, 152, 22, 0.3);
 }
 
-.social-icon {
+body .social-link:hover::before {
+    opacity: 1;
+}
+
+body .social-link svg {
     position: relative;
-    z-index: 2;
-    font-size: 1.3rem;
-    font-weight: 600;
+    z-index: 1;
+    transition: transform 0.3s ease;
 }
 
-@media (max-width: 575.98px) {
-    .social-buttons {
-        gap: 1rem;
+body .social-link:hover svg {
+    transform: scale(1.1);
+}
+
+[data-theme="dark"] body .social-link:hover {
+    box-shadow: 0 4px 12px rgba(176, 200, 48, 0.4);
+}
+
+/* Навигационные ссылки */
+body .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body .footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+body .footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+}
+
+body .footer-links a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent);
+    transition: width 0.3s ease;
+}
+
+body .footer-links a:hover {
+    color: var(--navbar-text);
+    padding-left: 8px;
+}
+
+body .footer-links a:hover::before {
+    width: calc(100% - 8px);
+}
+
+/* Контакты */
+body .footer-contacts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body .footer-contacts li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+body .footer-contacts svg {
+    flex-shrink: 0;
+    color: var(--navbar-text);
+    opacity: 0.8;
+}
+
+body .footer-contacts span {
+    line-height: 1.4;
+}
+
+/* Нижняя часть футера */
+body .footer-bottom {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(126, 152, 22, 0.15);
+}
+
+[data-theme="dark"] body .footer-bottom {
+    border-top-color: rgba(176, 200, 48, 0.15);
+}
+
+body .footer-copyright,
+body .footer-credits {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+body .footer-credits .heart {
+    color: #e63946;
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+}
+
+/* Адаптивность */
+@media (max-width: 767.98px) {
+    body .site-footer {
+        padding: 3rem 0 0;
+        text-align: center;
     }
-    .social-btn {
-        width: 48px;
-        height: 48px;
+
+    body .footer-heading::after {
+        left: 50%;
+        transform: translateX(-50%);
     }
-    .social-icon {
-        font-size: 1.1rem;
+
+    body .social-links {
+        justify-content: center;
+    }
+
+    body .footer-links a:hover {
+        padding-left: 0;
+    }
+
+    body .footer-links a:hover::before {
+        width: 100%;
+    }
+
+    body .footer-contacts li {
+        justify-content: center;
+    }
+
+    body .footer-bottom {
+        margin-top: 2rem;
     }
 }
 
@@ -910,9 +1068,9 @@ footer,
 }
 
 /* Заголовок */
-.glass-card h3,
-.surprise-card h3 {
-    color: #1a1a1a !important;
+body .glass-card h3,
+body .surprise-card h3 {
+    color: #1a1a1a;
     font-weight: 700;
     font-size: 1.25rem;
     line-height: 1.3;
@@ -922,43 +1080,43 @@ footer,
     z-index: 2;
 }
 
-[data-theme="dark"] .surprise-card h3 {
-    color: #ffffff !important;
+[data-theme="dark"] body .surprise-card h3 {
+    color: #ffffff;
 }
 
-.surprise-card:hover h3 {
-    color: var(--accent-hover) !important;
+body .surprise-card:hover h3 {
+    color: var(--accent-hover);
 }
 
 /* Цветные заголовки при наведении по категориям */
-.surprise-card[data-category="history"]:hover h3 {
-    color: #ff6b6b !important;
+body .surprise-card[data-category="history"]:hover h3 {
+    color: #ff6b6b;
 }
 
-.surprise-card[data-category="biography"]:hover h3 {
-    color: #4ecdc4 !important;
+body .surprise-card[data-category="biography"]:hover h3 {
+    color: #4ecdc4;
 }
 
-.surprise-card[data-category="creative"]:hover h3 {
-    color: #a78bfa !important;
+body .surprise-card[data-category="creative"]:hover h3 {
+    color: #a78bfa;
 }
 
-.surprise-card[data-category="talent"]:hover h3 {
-    color: #fbbf24 !important;
+body .surprise-card[data-category="talent"]:hover h3 {
+    color: #fbbf24;
 }
 
-.surprise-card[data-category="influence"]:hover h3 {
-    color: #ec4899 !important;
+body .surprise-card[data-category="influence"]:hover h3 {
+    color: #ec4899;
 }
 
-.surprise-card[data-category="record"]:hover h3 {
-    color: #10b981 !important;
+body .surprise-card[data-category="record"]:hover h3 {
+    color: #10b981;
 }
 
 /* Текст описания */
-.glass-card p,
-.surprise-card p {
-    color: #1a1a1a !important;
+body .glass-card p,
+body .surprise-card p {
+    color: #1a1a1a;
     font-size: 1rem;
     line-height: 1.6;
     margin: 0;
@@ -967,8 +1125,8 @@ footer,
     z-index: 2;
 }
 
-[data-theme="dark"] .surprise-card p {
-    color: #ffffff !important;
+[data-theme="dark"] body .surprise-card p {
+    color: #ffffff;
 }
 
 /* Badge стили для фактов */
@@ -1023,12 +1181,12 @@ footer,
 }
 
 /* Номер факта и мелкий текст */
-.surprise-card .text-muted {
-    color: #6a6a6a !important;
+body .surprise-card .text-muted {
+    color: #6a6a6a;
 }
 
-[data-theme="dark"] .surprise-card .text-muted {
-    color: rgba(255, 255, 255, 0.7) !important;
+[data-theme="dark"] body .surprise-card .text-muted {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Декоративный элемент в углу - ОТКЛЮЧЁН */
@@ -1313,15 +1471,15 @@ footer,
 }
 
 /* Класс для видимой кнопки */
-.button-visible {
-    opacity: 1 !important;
-    pointer-events: auto !important;
+body .button-visible.button-visible {
+    opacity: 1;
+    pointer-events: auto;
     transition: all 0.3s ease;
 }
 
 /* Анимация появления */
-.button-visible:hover {
-    transform: scale(1.05) !important;
+body .button-visible.button-visible:hover {
+    transform: scale(1.05);
 }
 
 /* Эффект раскраски при наведении */
@@ -1342,4 +1500,365 @@ footer,
 .button-visible:hover::before {
     width: 400px;
     height: 400px;
+}
+
+/* ============ АВТОРИЗАЦИЯ ============ */
+
+/* Анимация тряски для ошибок в формах */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+/* Стили для модальных окон авторизации */
+#loginModal .modal-content,
+#registerModal .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] #loginModal .modal-content,
+[data-theme="dark"] #registerModal .modal-content {
+    background: var(--bg-secondary);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+#loginModal .modal-header,
+#registerModal .modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+#loginModal .modal-body,
+#registerModal .modal-body {
+    padding: 1.5rem;
+}
+
+#loginModal .form-control,
+#registerModal .form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+#loginModal .form-control:focus,
+#registerModal .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(126, 152, 22, 0.15);
+}
+
+[data-theme="dark"] #loginModal .form-control:focus,
+[data-theme="dark"] #registerModal .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(176, 200, 48, 0.15);
+}
+
+/* Стили для кнопок авторизации в header */
+.login-btn, .register-btn {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 152, 22, 0.3);
+}
+
+/* Стили для отображения имени пользователя */
+.login-btn.btn-outline-primary {
+    font-weight: 600;
+    pointer-events: none;
+}
+
+/* Кнопка выхода */
+.register-btn.btn-outline-danger:hover {
+    background-color: var(--danger-color, #dc3545);
+    color: white;
+}
+
+/* Модальное окно подтверждения выхода */
+#logoutConfirmModal .modal-content {
+    border-radius: 16px;
+    border: none;
+}
+
+#logoutConfirmModal .modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Анимация появления уведомлений */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.notification {
+    animation: slideInDown 0.3s ease;
+}
+
+/* ============ СТИХ ДНЯ ============ */
+.poem-of-day-section {
+    background: linear-gradient(135deg, 
+        var(--bg-primary) 0%, 
+        rgba(126,152,22,0.03) 50%, 
+        var(--bg-primary) 100%
+    );
+}
+
+[data-theme="dark"] .poem-of-day-section {
+    background: linear-gradient(135deg, 
+        var(--bg-primary) 0%, 
+        rgba(176,200,48,0.05) 50%, 
+        var(--bg-primary) 100%
+    );
+}
+
+.poem-of-day-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 
+        0 4px 20px rgba(126,152,22,0.08),
+        0 0 0 1px rgba(126,152,22,0.05);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .poem-of-day-card {
+    background: #1e1e1e;
+    box-shadow: 
+        0 4px 20px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(176,200,48,0.1);
+}
+
+.poem-of-day-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 8px 30px rgba(126,152,22,0.12),
+        0 0 0 1px rgba(126,152,22,0.08);
+}
+
+[data-theme="dark"] .poem-of-day-card:hover {
+    box-shadow: 
+        0 8px 30px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(176,200,48,0.15);
+}
+
+.poem-of-day-content {
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body .poem-of-day-badge .badge.bg-accent {
+    background-color: var(--accent);
+    color: #1a1a1a;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(126,152,22,0.2);
+}
+
+[data-theme="dark"] .poem-of-day-badge .badge.bg-accent {
+    box-shadow: 0 2px 8px rgba(176,200,48,0.3);
+}
+
+.poem-of-day-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+    font-family: 'Great Vibes', cursive;
+}
+
+.poem-of-day-author {
+    font-size: 1.05rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(126,152,22,0.1);
+}
+
+[data-theme="dark"] .poem-of-day-author {
+    border-bottom-color: rgba(176,200,48,0.15);
+}
+
+.poem-of-day-author .poet-link {
+    color: var(--navbar-text);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.poem-of-day-author .poet-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.poem-of-day-author .poet-link:hover {
+    color: var(--accent);
+}
+
+.poem-of-day-author .poet-link:hover::after {
+    width: 100%;
+}
+
+.poem-of-day-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    margin-top: 1.5rem;
+}
+
+.poem-of-day-text .poem-stanza {
+    margin-bottom: 1.2rem;
+    white-space: pre-line;
+}
+
+.poem-of-day-text .poem-stanza:last-child {
+    margin-bottom: 0;
+}
+
+.poem-of-day-footer .tag-badge {
+    background: rgba(126,152,22,0.1);
+    color: var(--navbar-text);
+    border: 1px solid rgba(126,152,22,0.2);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .poem-of-day-footer .tag-badge {
+    background: rgba(176,200,48,0.12);
+    color: var(--navbar-text);
+    border-color: rgba(176,200,48,0.2);
+}
+
+.poem-of-day-footer .tag-badge:hover {
+    background: var(--accent);
+    color: #1a1a1a;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.poem-of-day-footer .mood-badge {
+    background: rgba(126,152,22,0.15);
+    color: var(--navbar-text);
+    border: 1px solid rgba(126,152,22,0.25);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+[data-theme="dark"] .poem-of-day-footer .mood-badge {
+    background: rgba(176,200,48,0.15);
+    color: var(--navbar-text);
+    border-color: rgba(176,200,48,0.25);
+}
+
+.poem-of-day-actions {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(126,152,22,0.1);
+}
+
+[data-theme="dark"] .poem-of-day-actions {
+    border-top-color: rgba(176,200,48,0.15);
+}
+
+.poem-of-day-actions .btn {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.poem-of-day-actions .btn-outline-primary {
+    border-color: var(--navbar-text);
+    color: var(--navbar-text);
+}
+
+.poem-of-day-actions .btn-outline-primary:hover {
+    background: var(--navbar-text);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126,152,22,0.2);
+}
+
+[data-theme="dark"] .poem-of-day-actions .btn-outline-primary:hover {
+    box-shadow: 0 4px 12px rgba(176,200,48,0.3);
+}
+
+.poem-of-day-actions .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #1a1a1a;
+}
+
+.poem-of-day-actions .btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126,152,22,0.3);
+}
+
+[data-theme="dark"] .poem-of-day-actions .btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(176,200,48,0.4);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .poem-of-day-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    .poem-of-day-title {
+        font-size: 1.4rem;
+    }
+    
+    .poem-of-day-text {
+        font-size: 1rem;
+    }
+    
+    .poem-of-day-actions {
+        flex-direction: column;
+    }
+    
+    .poem-of-day-actions .btn {
+        width: 100%;
+    }
 }

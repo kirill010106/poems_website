@@ -15,6 +15,10 @@
                     </a>
                     <a href="#" class="social-link" aria-label="VK" title="VK">
                         <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="M15.07294,2H8.9375C3.33331,2,2,3.33331,2,8.92706V15.0625C2,20.66663,3.32294,22,8.92706,22H15.0625C20.66669,22,22,20.67706,22,15.07288V8.9375C22,3.33331,20.67706,2,15.07294,2Zm3.07287,14.27081H16.6875c-.55206,0-.71875-.44793-1.70831-1.4375-.86463-.83331-1.22919-.9375-1.44794-.9375-.30206,0-.38544.08332-.38544.5v1.3125c0,.35419-.11456.5625-1.04162.5625a5.69214,5.69214,0,0,1-4.44794-2.66668A11.62611,11.62611,0,0,1,5.35419,8.77081c0-.21875.08331-.41668.5-.41668H7.3125c.375,0,.51044.16668.65625.55212.70831,2.08331,1.91669,3.89581,2.40625,3.89581.1875,0,.27081-.08331.27081-.55206V10.10413c-.0625-.97913-.58331-1.0625-.58331-1.41663a.36008.36008,0,0,1,.375-.33337h2.29169c.3125,0,.41662.15625.41662.53125v2.89587c0,.3125.13544.41663.22919.41663.1875,0,.33331-.10413.67706-.44788a11.99877,11.99877,0,0,0,1.79169-2.97919.62818.62818,0,0,1,.63544-.41668H17.9375c.4375,0,.53125.21875.4375.53125A18.20507,18.20507,0,0,1,16.41669,12.25c-.15625.23956-.21875.36456,0,.64581.14581.21875.65625.64582,1,1.05207a6.48553,6.48553,0,0,1,1.22912,1.70837C18.77081,16.0625,18.5625,16.27081,18.14581,16.27081Z"/></svg>
+<<<<<<< HEAD
+=======
+                                                    
+>>>>>>> 697ad7ba95b02dfc42d176acf3384e1b218d8c53
                     </a>
                     <a href="#" class="social-link" aria-label="Telegram" title="Telegram">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -35,14 +39,23 @@
                 </ul>
             </div>
 
+<<<<<<< HEAD
             <!-- Полезные ссылки -->
+=======
+            <!-- Быстрые ссылки -->
+>>>>>>> 697ad7ba95b02dfc42d176acf3384e1b218d8c53
             <div class="col-lg-2 col-md-6 col-6">
                 <h5 class="footer-heading">Полезное</h5>
                 <ul class="footer-links">
                     <li><a href="/pages/favorites.html">Избранное</a></li>
                     <li><a href="/pages/surprise.html">Удиви меня</a></li>
+<<<<<<< HEAD
                     <li><a href="/pages/mads.html">Величайший</a></li>
                     <li><a href="#" id="back-to-top">Наверх</a></li>
+=======
+                    <li><a href="/pages/mads.html">Величайший поэт</a></li>
+                    <li><a href="#" id="back-to-top">Наверх ↑</a></li>
+>>>>>>> 697ad7ba95b02dfc42d176acf3384e1b218d8c53
                 </ul>
             </div>
 
@@ -87,3 +100,79 @@
         </div>
     </div>
 </footer>
+<<<<<<< HEAD
+=======
+
+    <!-- Модальное окно: Вход -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Вход</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="loginEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="loginPassword" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-main w-100">Войти</button>
+                    </div>
+                </form>
+                <div class="mt-3 text-center">
+                    <small>Ещё нет аккаунта? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Зарегистрироваться</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно: Регистрация -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <div id="registerError" class="alert alert-danger d-none" role="alert"></div>
+                <div id="registerSuccess" class="alert alert-success d-none" role="alert"></div>
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label for="registerUsername" class="form-label">Имя пользователя</label>
+                        <input type="text" class="form-control" id="registerUsername" required minlength="3" maxlength="20">
+                        <div class="form-text">От 3 до 20 символов</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="registerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="registerPassword" required minlength="6">
+                        <div class="form-text">Минимум 6 символов</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPasswordConfirm" class="form-label">Подтвердите пароль</label>
+                        <input type="password" class="form-control" id="registerPasswordConfirm" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-main w-100">Зарегистрироваться</button>
+                    </div>
+                </form>
+                <div class="mt-3 text-center">
+                    <small>Уже есть аккаунт? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Войдите</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+>>>>>>> 697ad7ba95b02dfc42d176acf3384e1b218d8c53

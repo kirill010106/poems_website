@@ -790,6 +790,7 @@ body .social-link:hover svg {
 /* Навигационные ссылки */
 body .footer-links {
     list-style: none;
+<<<<<<< HEAD
     padding: 0 !important;
     margin: 0 !important;
     margin-bottom: 0 !important;
@@ -797,6 +798,14 @@ body .footer-links {
 
 body .footer-links li {
     margin-bottom: 0.75rem !important;
+=======
+    padding: 0;
+    margin: 0;
+}
+
+body .footer-links li {
+    margin-bottom: 0.75rem;
+>>>>>>> 697ad7ba95b02dfc42d176acf3384e1b218d8c53
 }
 
 body .footer-links a {

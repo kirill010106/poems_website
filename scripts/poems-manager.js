@@ -2,12 +2,24 @@
  * Менеджер для работы с базой стихотворений
  */
 
+// Определяем базовый путь для GitHub Pages
+function getBasePath() {
+    const path = window.location.pathname;
+    // Если мы в подпапке pages/, возвращаемся на уровень выше
+    if (path.includes('/pages/')) {
+        return '../';
+    }
+    // Для корневой страницы
+    return './';
+}
+
 class PoemsManager {
     constructor() {
         this.poems = [];
         this.poets = [];
         this.facts = [];
         this.loaded = false;
+        this.basePath = getBasePath();
     }
 
     /**
@@ -18,17 +30,17 @@ class PoemsManager {
 
         try {
             // Загружаем стихи
-            const poemsResponse = await fetch('/data/poems.json');
+            const poemsResponse = await fetch(this.basePath + 'data/poems.json');
             const poemsData = await poemsResponse.json();
             this.poems = poemsData.poems;
 
             // Загружаем поэтов
-            const poetsResponse = await fetch('/data/poets.json');
+            const poetsResponse = await fetch(this.basePath + 'data/poets.json');
             const poetsData = await poetsResponse.json();
             this.poets = poetsData.poets;
 
             // Загружаем факты
-            const factsResponse = await fetch('/data/facts.json');
+            const factsResponse = await fetch(this.basePath + 'data/facts.json');
             const factsData = await factsResponse.json();
             this.facts = factsData.facts;
 

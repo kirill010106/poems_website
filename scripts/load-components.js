@@ -6,6 +6,20 @@ let componentsLoaded = {
     auth: false
 };
 
+// Определяем базовый путь для GitHub Pages (глобальная переменная)
+function getComponentBasePath() {
+    const path = window.location.pathname;
+    // Если мы в подпапке pages/, возвращаемся на уровень выше
+    if (path.includes('/pages/')) {
+        return '../';
+    }
+    return './';
+}
+
+// Глобально доступный базовый путь
+const componentBasePath = getComponentBasePath();
+window.basePath = componentBasePath; // Для использования в других скриптах
+
 // Время начала загрузки (для минимального показа loader'а)
 const loadStartTime = Date.now();
 const MIN_LOADER_DURATION = 300; // минимум 300ms показа loader'а
@@ -19,7 +33,7 @@ $(document).ready(function () {
     loadAuthScript();
 
     // Загружаем футер
-    $('#footer-placeholder').load('/includes/footer.html', function () {
+    $('#footer-placeholder').load(componentBasePath + 'includes/footer.html', function () {
         console.log('Футер загружен');
         
         // Инициализируем кнопку "Наверх"
@@ -34,7 +48,7 @@ $(document).ready(function () {
 // Функция загрузки auth.js
 function loadAuthScript() {
     const authScript = document.createElement('script');
-    authScript.src = '/scripts/auth.js';
+    authScript.src = componentBasePath + 'scripts/auth.js';
     authScript.onload = function() {
         console.log('✅ auth.js загружен');
         componentsLoaded.auth = true;
@@ -46,7 +60,7 @@ function loadAuthScript() {
 
 // Функция загрузки хедера
 function loadHeader() {
-    $('#header-placeholder').load('/includes/header.html', function () {
+    $('#header-placeholder').load(componentBasePath + 'includes/header.html', function () {
         console.log('Хедер загружен');
 
         // Инициализируем тему
@@ -71,6 +85,9 @@ function loadHeader() {
 function checkAllComponentsLoaded() {
     if (componentsLoaded.header && componentsLoaded.footer && componentsLoaded.favorites && componentsLoaded.auth) {
         console.log('✅ Все компоненты загружены');
+        
+        // Исправляем абсолютные пути для GitHub Pages
+        fixAbsolutePaths();
         
         // Генерируем событие для других скриптов
         document.dispatchEvent(new CustomEvent('componentsLoaded'));
@@ -140,4 +157,27 @@ function initBackToTop() {
             });
         });
     }
+}
+
+// Функция для исправления абсолютных путей (для GitHub Pages)
+function fixAbsolutePaths() {
+    const basePath = componentBasePath;
+    
+    // Исправляем все ссылки с абсолютными путями
+    document.querySelectorAll('a[href^="/"]').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('/') && !href.startsWith('//')) {
+            link.setAttribute('href', basePath + href.substring(1));
+        }
+    });
+    
+    // Исправляем все изображения с абсолютными путями
+    document.querySelectorAll('img[src^="/"]').forEach(img => {
+        const src = img.getAttribute('src');
+        if (src && src.startsWith('/') && !src.startsWith('//')) {
+            img.setAttribute('src', basePath + src.substring(1));
+        }
+    });
+    
+    console.log('✅ Абсолютные пути исправлены для GitHub Pages');
 }

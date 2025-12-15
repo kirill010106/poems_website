@@ -1,6 +1,5 @@
 // ==================== ТЕМА (LIGHT/DARK) ====================
 
-// Шаг 1: Устанавливаем тему
 (function() {
     const savedTheme = localStorage.getItem('theme');
     const htmlElement = document.documentElement;
@@ -16,8 +15,6 @@
     }
 })();
 
-// Шаг 2: Глобальная функция для инициализации переключателя темы
-// Вызывается из load-components.js после загрузки header
 function initTheme() {
     const toggleButton = document.getElementById('theme-toggle');
     
@@ -30,13 +27,10 @@ function initTheme() {
 
     const htmlElement = document.documentElement;
     
-    // Устанавливаем правильную иконку при загрузке
     updateThemeButton();
 
-    // Помечаем кнопку как инициализированную
     toggleButton.setAttribute('data-theme-initialized', 'true');
 
-    // Обработчик клика
     toggleButton.addEventListener('click', function() {
         const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';

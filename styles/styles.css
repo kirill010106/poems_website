@@ -96,15 +96,54 @@
     --link-hover-bg: rgba(176,200,48,0.15);
     --hero-gradient-start: rgba(100,90,200,0.3);
 }
+
+/* ============ МОДАЛЬНЫЕ ОКНА (Формы входа/регистрации) ============ */
 .modal-content {
-    --bs-modal-bg: rgba(255, 255, 255, 0.8);
-    --bs-modal-border-color: rgba(255, 255, 255, 0.3);
+    --bs-modal-bg: #ffffff;
+    --bs-modal-border-color: rgba(0, 0, 0, 0.1);
     --bs-modal-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    background-color: var(--bs-modal-bg) !important;
 }
 
 [data-theme="dark"] .modal-content {
-    --bs-modal-bg: rgba(0, 0, 0, 0.2);
-    --bs-modal-border-color: rgba(255, 255, 255, 0.1);
+    --bs-modal-bg: #1e1e1e;
+    --bs-modal-border-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--bs-modal-bg) !important;
+}
+
+/* ============ ПОЛЯ ВВОДА (Формы) ============ */
+.form-control {
+    background-color: #f8f9fa !important;
+    border: 2px solid #dee2e6 !important;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    background-color: #ffffff !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(184, 230, 0, 0.2) !important;
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #2a2a2a !important;
+    border: 2px solid #444 !important;
+    color: #f0f0f0;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #333 !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(168, 216, 0, 0.25) !important;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #888;
 }
 
 /* ============ МОДАЛЬНОЕ ОКНО СО СТИХОМ ============ */
@@ -435,31 +474,62 @@ body .poet-card .poet-years,
 body .poet-card .poet-count { color: rgba(255, 255, 255, 0.75) !important; }
 
 /* ============ МОДАЛЫ ============ */
-/* Стандартные стили модалов (для других форм, кроме glassmorphism) */
+/* Стандартные стили модалов */
 body .modal-content {
-    background-color: var(--bg-primary);
+    background-color: #ffffff !important;
     color: var(--text-primary);
     border: none;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,.15);
 }
+[data-theme="dark"] body .modal-content {
+    background-color: #1e1e1e !important;
+}
 body .modal-header { border-bottom: 1px solid var(--link-hover-bg); padding-bottom: 0; }
 body .modal-title { color: var(--text-primary); }
 body .modal-body { padding-top: 1.5rem; color: var(--text-primary); }
 body .form-label { font-weight: 600; color: var(--text-primary); }
-body .form-control,
-body .form-text {
+body .form-control {
     color: var(--text-primary);
-    background-color: var(--bg-primary) !important;
-    border-color: var(--link-hover-bg);
+    background-color: #f8f9fa !important;
+    border: 2px solid #dee2e6 !important;
+    border-radius: 8px;
+}
+
+/* Подсказки под полями */
+body .form-text {
+    font-size: 0.8rem;
+    color: #6c757d !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0.25rem 0 0 0;
+    margin-top: 0.25rem;
+}
+
+[data-theme="dark"] body .form-text {
+    color: #999 !important;
+}
+
+[data-theme="dark"] body .form-control {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+    color: #f0f0f0;
 }
 
 body .form-control::placeholder {
-    color: var(--text-secondary);
+    color: #adb5bd;
+}
+[data-theme="dark"] body .form-control::placeholder {
+    color: #888;
 }
 body .form-control:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 .2rem rgba(184,230,0,.25);
+    background-color: #ffffff !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(184,230,0,.2) !important;
+}
+[data-theme="dark"] body .form-control:focus {
+    background-color: #333 !important;
+    box-shadow: 0 0 0 3px rgba(168, 216, 0, 0.25) !important;
 }
 
 /* ============ МОДАЛЬНЫЕ ФОРМЫ (Вход/Регистрация) ============ */
@@ -470,7 +540,7 @@ body .form-control:focus {
 }
 
 [data-theme="dark"] .modal-content {
-    background-color: #1e1e1e;
+    background-color: #1e1e1e !important;
     border-color: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
 }
@@ -523,8 +593,11 @@ body .form-control:focus {
 }
 
 .form-text {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+    font-size: 0.8rem;
+    color: #6c757d;
+    background: transparent !important;
+    border: none !important;
+    padding: 0;
 }
 
 .btn-close {

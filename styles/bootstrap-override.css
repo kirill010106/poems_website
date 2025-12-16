@@ -61,18 +61,23 @@
 
 /* ============ МОДАЛЬНЫЕ ОКНА ============ */
 .modal-content {
-    background-color: var(--bg-primary);
+    background-color: var(--bg-primary) !important;
     color: var(--text-primary);
-    border: 1px solid rgba(126, 152, 22, 0.1);
+    border: 1px solid rgba(126, 152, 22, 0.2);
+    border-radius: 12px;
 }
 
 [data-theme="dark"] .modal-content {
-    background-color: var(--bg-primary);
-    border: 1px solid rgba(176, 200, 48, 0.15);
+    background-color: #1e1e1e !important;
+    border: 1px solid rgba(176, 200, 48, 0.2);
 }
 
 .modal-header {
-    border-bottom-color: var(--link-hover-bg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .modal-footer {
@@ -98,19 +103,27 @@
 /* ============ ФОРМЫ ============ */
 .form-control {
     color: var(--text-primary);
-    background-color: var(--bg-primary);
-    border-color: var(--link-hover-bg);
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #f0f0f0;
 }
 
 .form-control:focus {
     color: var(--text-primary);
-    background-color: var(--bg-primary);
+    background-color: #ffffff;
     border-color: var(--accent);
-    box-shadow: 0 0 0 0.2rem rgba(126, 152, 22, 0.15);
+    box-shadow: 0 0 0 3px rgba(126, 152, 22, 0.2);
 }
 
 [data-theme="dark"] .form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(176, 200, 48, 0.15);
+    background-color: #333;
+    box-shadow: 0 0 0 3px rgba(176, 200, 48, 0.2);
 }
 
 .form-label {
@@ -183,14 +196,19 @@
     color: #1a1a1a;
 }
 
-.bg-secondary {
-    background-color: rgba(126, 152, 22, 0.15);
-    color: var(--navbar-text);
+/* Теги в модальных окнах стихов */
+.badge.bg-secondary {
+    background-color: #5a6f1a !important;
+    color: #ffffff !important;
+    border: 1px solid #4a5c15;
+    font-weight: 500;
+    padding: 0.4em 0.8em;
 }
 
-[data-theme="dark"] .bg-secondary {
-    background-color: rgba(176, 200, 48, 0.15);
-    color: var(--navbar-text);
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: rgba(176, 200, 48, 0.25) !important;
+    color: #c8e040 !important;
+    border: 1px solid rgba(176, 200, 48, 0.4);
 }
 
 /* ============ НАВБАР ============ */

@@ -38,6 +38,12 @@ class PoemsManager {
             const poetsResponse = await fetch(this.basePath + 'data/poets.json');
             const poetsData = await poetsResponse.json();
             this.poets = poetsData.poets;
+            
+            // Исправляем пути к изображениям для GitHub Pages
+            this.poets = this.poets.map(poet => ({
+                ...poet,
+                image: poet.image.startsWith('/') ? this.basePath + poet.image.substring(1) : poet.image
+            }));
 
             // Загружаем факты
             const factsResponse = await fetch(this.basePath + 'data/facts.json');
